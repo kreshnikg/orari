@@ -2,6 +2,7 @@
 
 
 namespace App;
+
 use Database\Model;
 
 class Perdoruesi extends Model
@@ -9,7 +10,8 @@ class Perdoruesi extends Model
     protected $table = 'perdoruesi';
     protected $primaryKey = 'perdoruesi_id';
 
-    public function roli(){
-        $this->hasOne('App\Roli','roli_id','roli_id');
+    public function roli()
+    {
+        $this->hasOne('App\Roli', 'roli_id', 'roli_id');
     }
 }

@@ -2,6 +2,7 @@
 
 
 namespace App;
+
 use Database\Model;
 
 class Roli extends Model
