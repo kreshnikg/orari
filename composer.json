@@ -15,7 +15,8 @@
         "classmap": [
             "database",
             "app",
-            "app/controller"
+            "app/controller",
+            "routes"
         ],
         "files": [
             "app\/Helpers\/helpers.php"

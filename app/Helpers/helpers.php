@@ -72,3 +72,13 @@ function filterVars($array, $toRemove = [])
         }, ARRAY_FILTER_USE_KEY
     );
 }
+
+/**
+ * @param string $view
+ * @param array $data
+ */
+function view($view, $data)
+{
+    extract($data);
+    require_once "./views/$view";
+}
