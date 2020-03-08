@@ -77,8 +77,10 @@ function filterVars($array, $toRemove = [])
  * @param string $view
  * @param array $data
  */
-function view($view, $data)
+function view($view, $data = null)
 {
-    extract($data);
-    require_once "./views/$view";
+    if ($data) {
+        extract($data);
+    }
+    require_once "./views/$view.php";
 }

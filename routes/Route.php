@@ -4,19 +4,44 @@ namespace Route;
 
 class Route
 {
-    private static $requestUri;
 
-    private static $uri;
-
-    private static $method;
-
-    private static $controller;
-
-    private static $function;
+    public $routes = [];
 
     public function __construct()
     {
 
+    }
+
+    public function checkRoute()
+    {
+        $requestUri = $_SERVER["REQUEST_URI"];
+        foreach ($this->routes as $route) {
+            if ($route["uri"] == $requestUri) {
+                $controller = $route["controller"];
+                $method = $route["method"];
+                $controller = "App\Controller\\$controller";
+                $INSTANCE = new $controller();
+                return $INSTANCE->$method();
+            }
+        }
+        response('Route not found!',404);
+    }
+
+    private function addRoute($route)
+    {
+        array_push($this->routes,$route);
+    }
+
+    private function registerRoute($uri, $controllerMethod,$requestMethod)
+    {
+        list($controller, $method) = explode("@", $controllerMethod);
+        $route = [
+            'uri' => $uri,
+            'controller' => $controller,
+            'method' => $method,
+            'requestMethod' => $requestMethod
+        ];
+        $this->addRoute($route);
     }
 
     private static function getId($uri, $requestUri)
@@ -31,60 +56,38 @@ class Route
         return false;
     }
 
-    private static function get()
+    public function get($uri,$controllerMethod)
     {
-        $id = self::getId(self::$uri, self::$requestUri);
-        $controller = self::$controller;
-        $controller = "App\Controller\\$controller";
-        $function = self::$function;
-        $INSTANCE = new $controller();
-        if ($id)
-            echo $INSTANCE->$function($id);
-        else
-            echo $INSTANCE->$function();
+        if($_SERVER["REQUEST_METHOD"] != "GET")
+            response('Wrong method', 500);
+        $this->registerRoute($uri,$controllerMethod,"GET");
     }
 
-    private static function post()
+    private function post($uri,$controllerMethod)
     {
-        $data = file_get_contents('php://input');
-        $dataJson = json_decode($data);
-        $id = self::getId(self::$uri, self::$requestUri);
-        $controller = self::$controller;
-        $controller = "App\Controller\\$controller";
-        $function = self::$function;
-        $INSTANCE = new $controller();
-        if ($id)
-            echo $INSTANCE->$function($dataJson, $id);
-        else
-            echo $INSTANCE->$function($dataJson);
-    }
+        if($_SERVER["REQUEST_METHOD"] != "POST")
+            response('Wrong method', 500);
+        $this->registerRoute($uri,$controllerMethod,"POST");
 
-    public static function __callStatic($name, $arguments)
-    {
-        list($uri, $controllerMethod) = $arguments;
-        $requestUri = $_SERVER["REQUEST_URI"];
-        if (fnmatch($uri, $requestUri)) {
-            list($controller, $method) = explode("@", $controllerMethod);
-            $requestMethod = $_SERVER["REQUEST_METHOD"];
-            self::$requestUri = $requestUri;
-            self::$uri = $uri;
-            self::$method = $requestMethod;
-            self::$function = $method;
-            self::$controller = $controller;
-            if ($name == "get" && $requestMethod == "GET") {
-                self::get();
-            } else if ($name == "post" && $requestMethod == "POST") {
-                self::post();
-            }
-        }
+//        $data = file_get_contents('php://input');
+//        $dataJson = json_decode($data);
+//        $id = self::getId(self::$uri, self::$requestUri);
+//        $controller = self::$controller;
+//        $controller = "App\Controller\\$controller";
+//        $function = self::$function;
+//        $INSTANCE = new $controller();
+//        if ($id)
+//            echo $INSTANCE->$function($dataJson, $id);
+//        else
+//            echo $INSTANCE->$function($dataJson);
     }
 
     public function middleware($type)
     {
-        switch($type){
+        switch ($type) {
             case "auth":
-                if (isset($_SESSION["logged_in"]) ) {
-                    if($_SESSION["logged_in"] != true)
+                if (isset($_SESSION["logged_in"])) {
+                    if ($_SESSION["logged_in"] != true)
                         die("Unauthorized");
                 } else
                     die("Unauthorized");

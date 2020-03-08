@@ -9,7 +9,7 @@ class PerdoruesiController
     public function index()
     {
         $users = Perdoruesi::all();
-        return view('index.php',[
+        return view('index',[
             'users' => $users
         ]);
     }
