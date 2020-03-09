@@ -5,13 +5,16 @@ namespace Route;
 class Route
 {
 
+    /**
+     * Application routes
+     * @var array
+     */
     public $routes = [];
 
-    public function __construct()
-    {
-
-    }
-
+    /**
+     * Map current route to controller callback
+     * @return mixed
+     */
     public function checkRoute()
     {
         $requestUri = $_SERVER["REQUEST_URI"];
@@ -24,17 +27,30 @@ class Route
                 return $INSTANCE->$method();
             }
         }
-        response('Route not found!',404);
+        return view('error/404');
     }
 
+    /**
+     * Add route
+     *
+     * @param object $route
+     */
     private function addRoute($route)
     {
         array_push($this->routes,$route);
     }
 
-    private function registerRoute($uri, $controllerMethod,$requestMethod)
+    /**
+     * Register route to $this->routes
+     *
+     * @param string $uri
+     * @param string $callback
+     * @param string $requestMethod
+     * @return void
+     */
+    private function registerRoute($uri, $callback,$requestMethod)
     {
-        list($controller, $method) = explode("@", $controllerMethod);
+        list($controller, $method) = explode("@", $callback);
         $route = [
             'uri' => $uri,
             'controller' => $controller,
@@ -56,18 +72,30 @@ class Route
         return false;
     }
 
-    public function get($uri,$controllerMethod)
+    /**
+     * Define a GET route
+     *
+     * @param string $uri
+     * @param string $callback
+     */
+    public function get($uri,$callback)
     {
         if($_SERVER["REQUEST_METHOD"] != "GET")
             response('Wrong method', 500);
-        $this->registerRoute($uri,$controllerMethod,"GET");
+        $this->registerRoute($uri,$callback,"GET");
     }
 
-    private function post($uri,$controllerMethod)
+    /**
+     * Define a POST route
+     *
+     * @param string $uri
+     * @param string $callback
+     */
+    private function post($uri,$callback)
     {
         if($_SERVER["REQUEST_METHOD"] != "POST")
             response('Wrong method', 500);
-        $this->registerRoute($uri,$controllerMethod,"POST");
+        $this->registerRoute($uri,$callback,"POST");
 
 //        $data = file_get_contents('php://input');
 //        $dataJson = json_decode($data);
