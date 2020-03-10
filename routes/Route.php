@@ -18,13 +18,18 @@ class Route
     public function checkRoute()
     {
         $requestUri = $_SERVER["REQUEST_URI"];
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
         foreach ($this->routes as $route) {
-            if ($route["uri"] == $requestUri) {
+            if (($route["uri"] == $requestUri) && ($route["requestMethod"] == $requestMethod)) {
                 $controller = $route["controller"];
                 $method = $route["method"];
                 $controller = "App\Controller\\$controller";
                 $INSTANCE = new $controller();
-                return $INSTANCE->$method();
+                if($route["requestMethod"] == "POST"){
+                    return $INSTANCE->$method($_POST);
+                } else {
+                    return $INSTANCE->$method();
+                }
             }
         }
         return view('error/404');
@@ -80,8 +85,6 @@ class Route
      */
     public function get($uri,$callback)
     {
-        if($_SERVER["REQUEST_METHOD"] != "GET")
-            response('Wrong method', 500);
         $this->registerRoute($uri,$callback,"GET");
     }
 
@@ -91,23 +94,9 @@ class Route
      * @param string $uri
      * @param string $callback
      */
-    private function post($uri,$callback)
+    public function post($uri,$callback)
     {
-        if($_SERVER["REQUEST_METHOD"] != "POST")
-            response('Wrong method', 500);
         $this->registerRoute($uri,$callback,"POST");
-
-//        $data = file_get_contents('php://input');
-//        $dataJson = json_decode($data);
-//        $id = self::getId(self::$uri, self::$requestUri);
-//        $controller = self::$controller;
-//        $controller = "App\Controller\\$controller";
-//        $function = self::$function;
-//        $INSTANCE = new $controller();
-//        if ($id)
-//            echo $INSTANCE->$function($dataJson, $id);
-//        else
-//            echo $INSTANCE->$function($dataJson);
     }
 
     public function middleware($type)

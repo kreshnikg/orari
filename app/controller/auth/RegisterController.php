@@ -13,7 +13,7 @@ class RegisterController extends BaseController
      */
     public function form()
     {
-
+        return view('register');
     }
 
     public function register($request)

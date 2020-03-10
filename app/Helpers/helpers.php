@@ -6,10 +6,20 @@
  */
 function response($message,$code = 200)
 {
-    echo $message;
+    echo var_dump($message);
     die(http_response_code($code));
 }
 
+function redirect($url){
+    header("Location: $url");
+}
+
+function redirectBack()
+{
+    $headers = apache_request_headers();
+    $lastUrl = $headers["Referer"];
+    redirect($lastUrl);
+}
 /**
  * Example $data = ["string", 2,"another string" ,2.02], => $types = "sisd"
  * String = 's';
