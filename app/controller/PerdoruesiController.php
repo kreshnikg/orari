@@ -40,7 +40,7 @@ class PerdoruesiController extends BaseController
         $user->email = $request["email"];
         $user->fjalkalimi = password_hash($request["fjalkalimi"], PASSWORD_DEFAULT);
         $user->save();
-        return redirectBack();
+        return redirect('/users');
     }
 
     /**

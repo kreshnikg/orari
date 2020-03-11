@@ -18,13 +18,13 @@ class LoginController extends BaseController
     public function login($request)
     {
         $this->validate($request,['email','fjalkalimi']);
-        $userData = Perdoruesi::where('email', '=', $request->email)->get();
+        $userData = Perdoruesi::where('email', '=', $request["email"])->get();
         $success = true;
         if(count($userData) == 1) {
             $user = $userData[0];
-            if (password_verify($request->fjalkalimi, $user->fjalkalimi)) {
+            if (password_verify($request["fjalkalimi"], $user->fjalkalimi)) {
                 $_SESSION["logged_in"] = true;
-                setcookie("user", json_encode(["emri" => $user->emri,"mbiemri" => $user->mbiemri]),time()+3600,"/");
+                setcookie("user", $user->emri . " " . $user->mbiemri,time()+3600,"/");
             } else {
                 $success = false;
             }
@@ -32,7 +32,7 @@ class LoginController extends BaseController
             $success = false;
         }
         if($success){
-            return "success";
+            return redirect('/');
         } else {
             response("Email ose fjalkalimi është gabim.",422);
         }

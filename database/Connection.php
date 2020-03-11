@@ -21,7 +21,7 @@ class Connection {
     /**
      * @var string
      */
-    private $db = "phptest";
+    private $db = "orari";
 
     /**
      * @var \mysqli

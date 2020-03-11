@@ -9,6 +9,7 @@ class Perdoruesi extends Model
 {
     protected $table = 'perdoruesi';
     protected $primaryKey = 'perdoruesi_id';
+    public $timestamps = false;
 
     public function roli()
     {
