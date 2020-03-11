@@ -3,7 +3,9 @@
 use Route\Route;
 
 $router = new Route();
-
+$router->get('/', function(){
+    return view('index');
+});
 $router->get('/users', 'PerdoruesiController@index');
 $router->post('/users', 'PerdoruesiController@store');
 $router->get('/users/create', 'PerdoruesiController@create');

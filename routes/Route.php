@@ -6,13 +6,13 @@ class Route
 {
 
     /**
-     * Application routes
+     * Application routes.
      * @var array
      */
     public $routes = [];
 
     /**
-     * Map current route to controller callback
+     * Map current route to callback.
      * @return mixed
      */
     public function checkRoute()
@@ -21,6 +21,10 @@ class Route
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         foreach ($this->routes as $route) {
             if (($route["uri"] == $requestUri) && ($route["requestMethod"] == $requestMethod)) {
+                if($route["callback"] != null){
+                    $callback = $route["callback"];
+                    return $callback();
+                }
                 $controller = $route["controller"];
                 $method = $route["method"];
                 $controller = "App\Controller\\$controller";
@@ -36,7 +40,7 @@ class Route
     }
 
     /**
-     * Add route
+     * Add route.
      *
      * @param object $route
      */
@@ -46,7 +50,7 @@ class Route
     }
 
     /**
-     * Register route to $this->routes
+     * Register route to $this->routes.
      *
      * @param string $uri
      * @param string $callback
@@ -55,13 +59,24 @@ class Route
      */
     private function registerRoute($uri, $callback,$requestMethod)
     {
-        list($controller, $method) = explode("@", $callback);
-        $route = [
-            'uri' => $uri,
-            'controller' => $controller,
-            'method' => $method,
-            'requestMethod' => $requestMethod
-        ];
+        if(is_callable($callback)) {
+            $route = [
+                'uri' => $uri,
+                'controller' => null,
+                'method' => null,
+                'requestMethod' => $requestMethod,
+                'callback' => $callback
+            ];
+        } else {
+            list($controller, $method) = explode("@", $callback);
+            $route = [
+                'uri' => $uri,
+                'controller' => $controller,
+                'method' => $method,
+                'requestMethod' => $requestMethod,
+                'callback' => null
+            ];
+        }
         $this->addRoute($route);
     }
 
@@ -78,7 +93,7 @@ class Route
     }
 
     /**
-     * Define a GET route
+     * Define a GET route.
      *
      * @param string $uri
      * @param string $callback
@@ -89,7 +104,7 @@ class Route
     }
 
     /**
-     * Define a POST route
+     * Define a POST route.
      *
      * @param string $uri
      * @param string $callback

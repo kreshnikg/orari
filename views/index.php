@@ -2,9 +2,8 @@
     include './views/layout/header.php';
 
     foreach ($users as $user) {
-        echo $user->email;
+        echo $user->emri . '<br>';
     }
-
 
     include './views/layout/footer.php';
 
