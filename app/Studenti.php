@@ -10,13 +10,13 @@ class Studenti extends Model
     protected $table = 'studenti';
     protected $primaryKey = 'studenti_id';
 
-    public function perdoruesi()
+    public function perdoruesi($nestedRelations = null)
     {
-        $this->hasOne('App\Perdoruesi', 'perdoruesi_id', 'studenti_id');
+        $this->hasOne('App\Perdoruesi', 'perdoruesi_id', 'studenti_id',$nestedRelations);
     }
 
-    public function grupi()
+    public function grupi($nestedRelations = null)
     {
-        $this->hasOne('App\Grupi', 'grupi_id', 'grupi_id');
+        $this->hasOne('App\Grupi', 'grupi_id', 'grupi_id',$nestedRelations);
     }
 }

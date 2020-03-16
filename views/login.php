@@ -4,6 +4,12 @@
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="./src/css/app.css"/>
     <link rel="stylesheet" type="text/css" href="./src/css/bootstrap.css"/>
+    <style>
+        body {
+            background: rgb(45,193,193);
+            background: linear-gradient(135deg, rgba(45,193,193,1) 0%, rgba(5,135,223,1) 100%);
+        }
+    </style>
 </head>
 <body>
 <div class="d-flex h-100">
@@ -11,6 +17,7 @@
         <div class="card-body p-0">
             <div class="p-5">
                 <div class="text-center">
+                    <img src="./storage/img/clock-logo.png" width="125" />
                     <h4 class="h4 mb-4">Mirë se erdhët!</h4>
                 </div>
                 <form action="/login" method="POST">
@@ -24,7 +31,7 @@
                 </form>
                 <hr/>
                 <div class="text-center">
-                    <a class="small" href="register.html">Nuk keni llogari? Regjistrohuni këtu!</a>
+                    <a class="small" href="register.html" style="color: #43485b">Nuk keni llogari? Regjistrohuni këtu!</a>
                 </div>
             </div>
         </div>

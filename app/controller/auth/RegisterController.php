@@ -13,9 +13,16 @@ class RegisterController extends BaseController
      */
     public function form()
     {
-        return view('register');
+        if(isAuthenticated())
+            redirect('/');
+        return view('register',null,false);
     }
 
+    /**
+     * Register new user.
+     *
+     * @param array $request
+     */
     public function register($request)
     {
         $this->validate($request,['emri','mbiemri','email','fjalkalimi']);

@@ -10,16 +10,23 @@ function response($message,$code = 200)
     die(http_response_code($code));
 }
 
+/**
+ * @param string $url
+ */
 function redirect($url){
     header("Location: $url");
+    $error = "asd";
 }
 
+/**
+ */
 function redirectBack()
 {
     $headers = apache_request_headers();
     $lastUrl = $headers["Referer"];
     redirect($lastUrl);
 }
+
 /**
  * Example $data = ["string", 2,"another string" ,2.02], => $types = "sisd"
  * String = 's';
@@ -86,11 +93,41 @@ function filterVars($array, $toRemove = [])
 /**
  * @param string $view
  * @param array $data
+ * @param boolean $withLayout
  */
-function view($view, $data = null)
+function view($view, $data = null,$withLayout = true)
 {
     if ($data) {
         extract($data);
     }
+    if($withLayout)
+        include "./views/layout/header.php";
+
     require_once "./views/$view.php";
+
+    if($withLayout)
+        include "./views/layout/footer.php";
+}
+
+/**
+ * @param string $component
+ * @param array $data
+ */
+function includeComponent($component,$data = null)
+{
+    if ($data) {
+        extract($data);
+    }
+    include "./views/$component.php";
+}
+
+/**
+ * Check if user is authenticated.
+ * @return bool
+ */
+function isAuthenticated(){
+    if(isset($_COOKIE["auth"]))
+        return $_COOKIE["auth"] == "1";
+    else
+        return false;
 }

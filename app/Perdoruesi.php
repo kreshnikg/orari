@@ -11,8 +11,8 @@ class Perdoruesi extends Model
     protected $primaryKey = 'perdoruesi_id';
     public $timestamps = false;
 
-    public function roli()
+    public function roli($nestedRelations = null)
     {
-        $this->hasOne('App\Roli', 'roli_id', 'roli_id');
+        $this->hasOne('App\Roli', 'roli_id', 'roli_id',$nestedRelations);
     }
 }

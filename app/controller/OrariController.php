@@ -3,19 +3,19 @@
 
 namespace App\Controller;
 
-use App\Perdoruesi;
 
-class PerdoruesiController extends BaseController
+class OrariController
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = Perdoruesi::all();
-        return view('index', [
-            'users' => $users
-        ]);
+
+//        preg_match("/\{(.*?)\}/",$url,$match);
+//        die(var_dump($match));
+        return view('orari/index');
     }
 
     /**
@@ -23,7 +23,6 @@ class PerdoruesiController extends BaseController
      */
     public function create()
     {
-        return view('users/create');
     }
 
     /**
@@ -33,14 +32,6 @@ class PerdoruesiController extends BaseController
      */
     public function store($request)
     {
-        $this->validate($request, ['emri', 'mbiemri', 'email', 'fjalkalimi']);
-        $user = new Perdoruesi;
-        $user->emri = $request["emri"];
-        $user->mbiemri = $request["mbiemri"];
-        $user->email = $request["email"];
-        $user->fjalkalimi = password_hash($request["fjalkalimi"], PASSWORD_DEFAULT);
-        $user->save();
-        return redirect('/users');
     }
 
     /**
@@ -50,7 +41,6 @@ class PerdoruesiController extends BaseController
      */
     public function show($id)
     {
-        die("Show id: $id");
     }
 
     /**
@@ -60,7 +50,6 @@ class PerdoruesiController extends BaseController
      */
     public function edit($id)
     {
-        die("Edit id: $id");
     }
 
     /**
@@ -71,9 +60,6 @@ class PerdoruesiController extends BaseController
      */
     public function update($request, $id)
     {
-        echo "Request:" . json_encode($request) . "<br>";
-        echo "Id: $id" . "<br>";
-        die();
     }
 
     /**

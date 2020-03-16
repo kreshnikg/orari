@@ -13,13 +13,41 @@ trait Relations
     private function bootRelations($relations)
     {
         foreach ($relations as $relation) {
-            if (method_exists($this, $relation))
-                $this->$relation();
-            else {
-                http_response_code(500);
-                throw new \BadMethodCallException("Relation '$relation' is not found!");
+
+            list($mainRelation, $nestedRelations) = $this->getNestedRelations($relation);
+
+            if ($nestedRelations != null) {
+                if (method_exists($this, $mainRelation))
+                    $this->$mainRelation($nestedRelations);
+                else {
+                    http_response_code(500);
+                    throw new \BadMethodCallException("Relation '$mainRelation' is not found!");
+                }
+            } else {
+                if (method_exists($this, $relation))
+                    $this->$relation();
+                else {
+                    http_response_code(500);
+                    throw new \BadMethodCallException("Relation '$relation' is not found!");
+                }
             }
         }
+    }
+
+    /**
+     * @param string $relation
+     * @return array|null
+     */
+    private function getNestedRelations($relation)
+    {
+        if (strpos($relation, ".") !== false) {
+            $nestedRelations = explode(".", $relation);
+            $mainRelation = $nestedRelations[0];
+            unset($nestedRelations[0]);
+            $nestedRelationsString = implode(".", $nestedRelations);
+            return [$mainRelation, $nestedRelationsString];
+        } else
+            return null;
     }
 
     /**
@@ -60,15 +88,21 @@ trait Relations
     private function addRelationDataToResult($result)
     {
         foreach ($this->with as $relation) {
+
             $model = new $relation["model"];
             $foreginKey = $relation["foreignKey"];
             $localKey = $relation["localKey"];
-            $modelIDs = $this->getModelIDs($result, $foreginKey);
+            $modelIDs = $this->getModelIDs($result, $localKey);
 
             if (count($modelIDs) == 0)
                 continue;
 
-            $models = $model->whereIn($model->primaryKey, $modelIDs)->get();
+            $nestedRelations = $relation["nestedRelations"];
+            if ($nestedRelations != null) {
+                $models = $model::with([$nestedRelations])->whereIn($model->primaryKey, $modelIDs)->get();
+            } else {
+                $models = $model->whereIn($model->primaryKey, $modelIDs)->get();
+            }
             foreach ($result as $res) {
                 $name = $model->table;
                 $relatedModel = array_filter($models, function ($mdl) use ($res, $localKey, $foreginKey) {
@@ -86,17 +120,19 @@ trait Relations
      * Define a one-to-one relationship
      *
      * @param string $model
-     * @param string $foreignKey
-     * @param string $localKey
+     * @param string|null $foreignKey
+     * @param string|null $localKey
+     * @param array|null $nestedRelations
      * @return void
      */
-    public function hasOne($model, $foreignKey = null, $localKey = null)
+    public function hasOne($model, $foreignKey = null, $localKey = null, $nestedRelations = null)
     {
         array_push($this->with, [
             "model" => $model,
             "foreignKey" => $foreignKey,
             "localKey" => $localKey,
-            "type" => "hasOne"
+            "type" => "hasOne",
+            "nestedRelations" => $nestedRelations
         ]);
     }
 
