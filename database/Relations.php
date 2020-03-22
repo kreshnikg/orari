@@ -142,15 +142,17 @@ trait Relations
      * @param string $model
      * @param string $foreignKey
      * @param string $localKey
+     * @param array|null $nestedRelations
      * @return void
      */
-    public function hasMany($model, $foreignKey = null, $localKey = null)
+    public function hasMany($model, $foreignKey = null, $localKey = null, $nestedRelations = null)
     {
         array_push($this->with, [
             "model" => $model,
             "foreignKey" => $foreignKey,
             "localKey" => $localKey,
-            "type" => "hasMany"
+            "type" => "hasMany",
+            "nestedRelations" => $nestedRelations
         ]);
     }
 }

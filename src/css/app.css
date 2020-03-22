@@ -3,8 +3,18 @@ body {
     color:#343a40 !important;
 }
 
+.body-auth{
+    background: rgb(45,193,193);
+    background: linear-gradient(135deg, rgba(45,193,193,1) 0%, rgba(5,135,223,1) 100%);
+}
+
+.body-auth a {
+    color: #43485b;
+}
+
 .login-card {
     border: 0 !important;
+    width: 500px;
 }
 
 .login-input {
@@ -211,4 +221,21 @@ body {
 
 .content .content-margin{
     padding: 15px 0;
+}
+
+.my-link {
+    color:#088cdd !important;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.my-btn-primary-color {
+    background-color: #088cdd !important;
+    border-color: #088cdd !important;
+}
+
+.my-btn-primary-color:hover{
+    transition-duration: 0.3s;
+    background-color: #17a1d2 !important;
+    border-color: #17a1d2    !important;
 }

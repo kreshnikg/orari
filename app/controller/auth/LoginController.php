@@ -14,7 +14,7 @@ class LoginController extends BaseController
     public function form(){
         if(isAuthenticated())
             redirect('/');
-        return view('login',null,false);
+        return view('auth/login',null,false);
     }
 
     /**
@@ -24,10 +24,9 @@ class LoginController extends BaseController
     public function login($request)
     {
         $this->validate($request,['email','fjalkalimi']);
-        $userData = Perdoruesi::where('email', '=', $request["email"])->get();
+        $user = Perdoruesi::where('email', '=', $request["email"])->first();
         $success = false;
-        if(count($userData) == 1) {
-            $user = $userData[0];
+        if($user) {
             if (password_verify($request["fjalkalimi"], $user->fjalkalimi)) {
                 $_SESSION["logged_in"] = true;
                 setcookie("auth", "1",time()+3600,"/");

@@ -1,3 +1,8 @@
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="/lendet/create" class="btn btn-primary my-btn-primary-color">Shto lëndë</a>
+</div>
+
 <table class="table">
     <thead>
     <tr>
@@ -7,9 +12,9 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach($lendet as $lenda) : ?>
+    <?php foreach($lendet as $key => $lenda) : ?>
         <tr>
-            <th scope="row"><?= $lenda->lenda_id?></th>
+            <th scope="row"><?= $key + 1?></th>
             <td><?= $lenda->emertimi?></td>
             <td><?= $lenda->kodi?></td>
         </tr>

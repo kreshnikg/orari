@@ -87,7 +87,7 @@ class Model
     }
 
     /**
-     * Excecute query and convert results to array
+     * Excecute query and convert results to array.
      *
      * @return array
      */
@@ -170,13 +170,7 @@ class Model
     private function insert($data){
         $keys = array_keys($data);
         $values = array_values($data);
-        if ($this->timestamps()) {
-            array_push($keys, $this->CREATED_AT, $this->UPDATED_AT);
-            $date = date("d-m-Y");
-            $this->addValue($date,$date);
-        }
         $this->insertQuery($keys,$values)->excecuteQuery();
-        return "success";
     }
 
     /**
@@ -193,13 +187,32 @@ class Model
     }
 
     /**
-     *  Get all records of model on database
+     *  Get all records of model on database.
      *
      * @return array
      */
     public static function all()
     {
         return self::select('*')->get();
+    }
+
+    /**
+     * Get the first record of model on database.
+     *
+     */
+    public function first()
+    {
+        return current($this->limitQuery(1)->get());
+    }
+
+    /**
+     * Get the last record of model on database.
+     *
+     * @return $this
+     */
+    public function last()
+    {
+        return current($this->orderBy($this->primaryKey, "DESC")->limitQuery(1)->get());
     }
 
     public function __call($function, $arguments)

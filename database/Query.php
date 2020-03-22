@@ -2,6 +2,8 @@
 
 namespace Database;
 
+use http\Exception\InvalidArgumentException;
+
 trait Query {
 
     /**
@@ -187,6 +189,11 @@ trait Query {
     private function insertQuery($keys,$values)
     {
         $this->addValue(...$values);
+        if ($this->timestamps()) {
+            array_push($keys, $this->CREATED_AT, $this->UPDATED_AT);
+            $date = date("Y-m-d");
+            $this->addValue($date,$date);
+        }
         $keysString = implode(",", $keys);
         $parameters = $this->getParametersForQuery(count($keys));
         $this->query = "INSERT INTO $this->table ($keysString) VALUES ($parameters); ";
@@ -202,6 +209,19 @@ trait Query {
     {
         if (($order == 'ASC' || $order == 'DESC') && !empty($this->query))
             $this->query .= " ORDER BY $column $order";
+        return $this;
+    }
+
+    /**
+     * @param integer $number
+     * @return $this
+     */
+    private function limitQuery($number)
+    {
+        if (!is_numeric($number))
+            throw new InvalidArgumentException("SQL LIMIT query accepts only numbers");
+
+        $this->query .= " LIMIT $number";
         return $this;
     }
 

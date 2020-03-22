@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Lenda;
 
-class LendaController
+class LendaController extends BaseController
 {
 
     /**
@@ -25,6 +25,7 @@ class LendaController
      */
     public function create()
     {
+        return view('lendet/create');
     }
 
     /**
@@ -34,6 +35,14 @@ class LendaController
      */
     public function store($request)
     {
+        $this->validate($request,["emertimi","kodi"]);
+
+        $lenda = new Lenda;
+        $lenda->emertimi = $request["emertimi"];
+        $lenda->kodi = $request["kodi"];
+        $lenda->save();
+
+        return redirect("/lendet");
     }
 
     /**

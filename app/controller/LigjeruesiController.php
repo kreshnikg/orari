@@ -4,7 +4,9 @@
 namespace App\Controller;
 
 
-class OrariController
+use App\Ligjeruesi;
+
+class LigjeruesiController
 {
 
     /**
@@ -12,7 +14,10 @@ class OrariController
      */
     public function index()
     {
-        return view('orari/index');
+        $ligjeruesit = Ligjeruesi::with(['perdoruesi','lloji'])->select('*')->get();
+        return view('ligjeruesit/index',[
+            'ligjeruesit' => $ligjeruesit
+        ]);
     }
 
     /**

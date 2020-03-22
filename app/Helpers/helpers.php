@@ -4,16 +4,28 @@
  * @param string $message
  * @param int $code
  */
-function response($message,$code = 200)
+function response($message, $code = 200)
 {
     echo var_dump($message);
     die(http_response_code($code));
 }
 
 /**
+ * @param string $message
+ * @param int $code
+ */
+function responseJson($message, $code = 200)
+{
+    header('Content-type: application/json');
+    echo json_encode($message);
+    die(http_response_code($code));
+}
+
+/**
  * @param string $url
  */
-function redirect($url){
+function redirect($url)
+{
     header("Location: $url");
     $error = "asd";
 }
@@ -95,28 +107,29 @@ function filterVars($array, $toRemove = [])
  * @param array $data
  * @param boolean $withLayout
  */
-function view($view, $data = null,$withLayout = true)
+function view($view, $data = null, $withLayout = true)
 {
     if ($data) {
         extract($data);
     }
-    if($withLayout)
+    if ($withLayout)
         include "./views/layout/header.php";
 
     require_once "./views/$view.php";
 
-    if($withLayout)
+    if ($withLayout)
         include "./views/layout/footer.php";
 }
 
 /**
  * @param string $component
  * @param array $data
+ * @param string $prefix
  */
-function includeComponent($component,$data = null)
+function includeComponent($component, $data = null, $prefix = "")
 {
     if ($data) {
-        extract($data);
+        extract($data, EXTR_PREFIX_ALL, $prefix);
     }
     include "./views/$component.php";
 }
@@ -125,8 +138,9 @@ function includeComponent($component,$data = null)
  * Check if user is authenticated.
  * @return bool
  */
-function isAuthenticated(){
-    if(isset($_COOKIE["auth"]))
+function isAuthenticated()
+{
+    if (isset($_COOKIE["auth"]))
         return $_COOKIE["auth"] == "1";
     else
         return false;

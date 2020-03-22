@@ -37,6 +37,7 @@ class Connection {
         {
             die("Problem ne konektim " . $this->connection->connect_error);
         }
+        $this->connection->set_charset("utf8");
         return $this->connection;
     }
 

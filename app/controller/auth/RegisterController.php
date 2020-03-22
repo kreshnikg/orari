@@ -15,7 +15,7 @@ class RegisterController extends BaseController
     {
         if(isAuthenticated())
             redirect('/');
-        return view('register',null,false);
+        return view('auth/register',null,false);
     }
 
     /**
@@ -26,6 +26,7 @@ class RegisterController extends BaseController
     public function register($request)
     {
         $this->validate($request,['emri','mbiemri','email','fjalkalimi']);
+
         $user = new Perdoruesi;
         $user->emri = $request->emri;
         $user->mbiemri = $request->mbiemri;

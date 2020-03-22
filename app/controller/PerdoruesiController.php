@@ -34,12 +34,14 @@ class PerdoruesiController extends BaseController
     public function store($request)
     {
         $this->validate($request, ['emri', 'mbiemri', 'email', 'fjalkalimi']);
+
         $user = new Perdoruesi;
         $user->emri = $request["emri"];
         $user->mbiemri = $request["mbiemri"];
         $user->email = $request["email"];
         $user->fjalkalimi = password_hash($request["fjalkalimi"], PASSWORD_DEFAULT);
         $user->save();
+
         return redirect('/users');
     }
 

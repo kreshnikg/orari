@@ -11,8 +11,14 @@ class Route
      */
     public $routes = [];
 
-    private function getUriWithRegex($uri){
-
+    /**
+     * Convert route uri to regex.
+     *
+     * @param string $uri
+     * @return string
+     */
+    private function getUriWithRegex($uri)
+    {
         $hasParameters = false;
         $uriArray = array_filter(explode("/", $uri));
         foreach ($uriArray as $key => $value) {
@@ -28,6 +34,14 @@ class Route
         return $uri;
     }
 
+    /**
+     * Match requested route.
+     *
+     * @param object $route
+     * @param string $requestUri
+     * @param string $requestMethod
+     * @return bool
+     */
     private function matchRoute($route,$requestUri,$requestMethod){
         $routeUri = $route["uri"];
         $routeUriRegex = $this->getUriWithRegex($routeUri);
@@ -39,18 +53,16 @@ class Route
         return ($routeCheck && ($route["requestMethod"] == $requestMethod));
     }
 
-    private function excecuteRouteCallback($route,$requestUri){
+    private function excecuteRouteCallback($route,$uriParameters){
         $callback = $route["callback"];
         if($callback != null){
-            return $callback();
+            return $callback(...$uriParameters);
         }
 
         $controller = $route["controller"];
         $method = $route["method"];
         $controller = "App\Controller\\$controller";
         $INSTANCE = new $controller();
-
-        $uriParameters = $this->getParameters($route["uri"], $requestUri);
 
         $methodParameters = array();
         if($route["requestMethod"] == "POST"){
@@ -69,24 +81,27 @@ class Route
      */
     public function checkRoute()
     {
-        $requestUri = $_SERVER["REQUEST_URI"];
+        $parsedUrl = parse_url($_SERVER["REQUEST_URI"]);
+        $path = $parsedUrl["path"];
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         foreach ($this->routes as $route) {
-            if ($this->matchRoute($route,$requestUri,$requestMethod)) {
+            if ($this->matchRoute($route,$path,$requestMethod)) {
                 if($route["authenticated"]){
                     if(!isAuthenticated())
                         redirect('/login');
                 }
-                return $this->excecuteRouteCallback($route,$requestUri);
+                $uriParameters = $this->getParameters($route["uri"], $path);
+
+                return $this->excecuteRouteCallback($route,$uriParameters);
             }
         }
-        return view('error/404');
+        return view('error/404',null,false);
     }
 
     /**
      * Add route.
      *
-     * @param object $route
+     * @param object|array $route
      */
     private function addRoute($route)
     {
@@ -104,25 +119,18 @@ class Route
      */
     private function registerRoute($uri, $callback, $requestMethod, $authenticated)
     {
-        if(is_callable($callback)) {
-            $route = [
-                'uri' => $uri,
-                'controller' => null,
-                'method' => null,
-                'requestMethod' => $requestMethod,
-                'authenticated' => $authenticated,
-                'callback' => $callback
-            ];
-        } else {
+        $route = [
+            'uri' => $uri,
+            'requestMethod' => $requestMethod,
+            'authenticated' => $authenticated,
+            'callback' => null
+        ];
+        if(is_callable($callback))
+            $route["callback"] = $callback;
+        else {
             list($controller, $method) = explode("@", $callback);
-            $route = [
-                'uri' => $uri,
-                'controller' => $controller,
-                'method' => $method,
-                'requestMethod' => $requestMethod,
-                'authenticated' => $authenticated,
-                'callback' => null
-            ];
+            $route['controller'] = $controller;
+            $route['method'] = $method;
         }
         $this->addRoute($route);
     }
