@@ -1,6 +1,6 @@
 
 <div class="d-flex justify-content-end mb-3">
-    <a href="/lendet/create" class="btn btn-primary my-btn-primary-color">Shto lëndë</a>
+    <a href="/subjects/create" class="btn btn-primary my-btn-primary-color">Shto lëndë</a>
 </div>
 
 <table class="table">
@@ -12,11 +12,11 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach($lendet as $key => $lenda) : ?>
+    <?php foreach($subjects as $key => $subject) : ?>
         <tr>
             <th scope="row"><?= $key + 1?></th>
-            <td><?= $lenda->emertimi?></td>
-            <td><?= $lenda->kodi?></td>
+            <td><?= $subject->title?></td>
+            <td><?= $subject->code?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

@@ -1,6 +1,6 @@
 
 <div class="d-flex justify-content-end mb-3">
-    <a href="/studentet/create" class="btn btn-primary my-btn-primary-color">Shto student</a>
+    <a href="/students/create" class="btn btn-primary my-btn-primary-color">Shto student</a>
 </div>
 
 <table class="table">
@@ -14,13 +14,13 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach($studentet as $key => $studenti) : ?>
+    <?php foreach($students as $key => $student) : ?>
         <tr>
             <th scope="row"><?= $key + 1?></th>
-            <td><?= $studenti->perdoruesi->emri . " " . $studenti->perdoruesi->mbiemri?></td>
-            <td><?= $studenti->gjenerata->pershkrimi ?></td>
-            <td><?= $studenti->semestri->viti->pershkrimi ?></td>
-            <td><?= $studenti->semestri->pershkrimi ?></td>
+            <td><?= $student->user->first_name . " " . $student->user->last_name?></td>
+            <td><?= $student->generation->description ?></td>
+            <td><?= $student->semester->study_year->description ?></td>
+            <td><?= $student->semester->description ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

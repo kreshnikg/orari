@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Orari</title>
     <meta charset="utf-8">
     <script src="/src/js/app.js"></script>
     <link rel="stylesheet" href="/src/css/fontawesome/css/all.css">
@@ -20,17 +20,22 @@
             "icon" => "far fa-calendar-alt"
         ],"sidebarItem"); ?>
         <?php includeComponent('/components/sidebar-item',[
-            "href" => "/lendet",
+            "href" => "/schedules",
+            "title" => "Terminet",
+            "icon" => "far fa-clock"
+        ],"sidebarItem"); ?>
+        <?php includeComponent('/components/sidebar-item',[
+            "href" => "/subjects",
             "title" => "Lëndët",
             "icon" => "fas fa-book-open"
         ],"sidebarItem"); ?>
         <?php includeComponent('/components/sidebar-item',[
-            "href" => "/studentet",
+            "href" => "/students",
             "title" => "Studentët",
             "icon" => "fas fa-user-graduate"
         ],"sidebarItem"); ?>
         <?php includeComponent('/components/sidebar-item',[
-            "href" => "/ligjeruesit",
+            "href" => "/teachers",
             "title" => "Ligjëruesit",
             "icon" => "fas fa-chalkboard-teacher"
         ],"sidebarItem"); ?>
@@ -48,7 +53,6 @@
         <i class="fa fa-bars"></i>
     </a>
 
-    <!-- Search -->
     <div class="searchbar">
         <form method="GET" action="">
             <input type="text" name="search" placeholder="Kërko" class="searchbar-input"/>
@@ -57,11 +61,8 @@
     </div>
 
     <ul class="profile-container">
-        <li class="messages">
-            <i class="fa fa-envelope"></i>
-        </li>
-        <li class="cart">
-            <i class="fa fa-shopping-cart"></i>
+        <li>
+            <?= getFullDate() ?>
         </li>
         <li>
             <div class="topbar-divider"></div>

@@ -4,7 +4,7 @@
 namespace App\Controller\Auth;
 
 use App\Controller\BaseController;
-use App\Perdoruesi;
+use App\User;
 
 class LoginController extends BaseController
 {
@@ -23,14 +23,14 @@ class LoginController extends BaseController
      */
     public function login($request)
     {
-        $this->validate($request,['email','fjalkalimi']);
-        $user = Perdoruesi::where('email', '=', $request["email"])->first();
+        $this->validate($request,['email','password']);
+        $user = User::where('email', '=', $request["email"])->first();
         $success = false;
         if($user) {
-            if (password_verify($request["fjalkalimi"], $user->fjalkalimi)) {
+            if (password_verify($request["password"], $user->password)) {
                 $_SESSION["logged_in"] = true;
                 setcookie("auth", "1",time()+3600,"/");
-                setcookie("user", $user->emri . " " . $user->mbiemri,time()+3600,"/");
+                setcookie("user", $user->first_name . " " . $user->last_name,time()+3600,"/");
                 $success = true;
             }
         }

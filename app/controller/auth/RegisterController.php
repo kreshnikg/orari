@@ -4,7 +4,7 @@
 namespace App\Controller\Auth;
 
 use App\Controller\BaseController;
-use App\Perdoruesi;
+use App\User;
 
 class RegisterController extends BaseController
 {
@@ -25,13 +25,13 @@ class RegisterController extends BaseController
      */
     public function register($request)
     {
-        $this->validate($request,['emri','mbiemri','email','fjalkalimi']);
+        $this->validate($request,['first_name','last_name','email','password']);
 
-        $user = new Perdoruesi;
-        $user->emri = $request->emri;
-        $user->mbiemri = $request->mbiemri;
+        $user = new User;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
         $user->email = $request->email;
-        $user->fjalkalimi = password_hash($request->fjalkalimi,PASSWORD_DEFAULT);
+        $user->password = password_hash($request->password,PASSWORD_DEFAULT);
         $user->save();
 
         $login = new LoginController;

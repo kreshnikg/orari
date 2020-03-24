@@ -4,9 +4,9 @@
 namespace App\Controller;
 
 
-use App\Lenda;
+use App\Teacher;
 
-class LendaController extends BaseController
+class TeacherController
 {
 
     /**
@@ -14,9 +14,9 @@ class LendaController extends BaseController
      */
     public function index()
     {
-        $lendet = Lenda::all();
-        return view('lendet/index',[
-            'lendet' => $lendet
+        $teachers = Teacher::with(['user','type'])->select('*')->get();
+        return view('teachers/index',[
+            'teachers' => $teachers
         ]);
     }
 
@@ -25,7 +25,6 @@ class LendaController extends BaseController
      */
     public function create()
     {
-        return view('lendet/create');
     }
 
     /**
@@ -35,14 +34,6 @@ class LendaController extends BaseController
      */
     public function store($request)
     {
-        $this->validate($request,["emertimi","kodi"]);
-
-        $lenda = new Lenda;
-        $lenda->emertimi = $request["emertimi"];
-        $lenda->kodi = $request["kodi"];
-        $lenda->save();
-
-        return redirect("/lendet");
     }
 
     /**

@@ -4,9 +4,9 @@
 namespace App\Controller;
 
 
-use App\Ligjeruesi;
+use App\Student;
 
-class LigjeruesiController
+class StudentController
 {
 
     /**
@@ -14,9 +14,9 @@ class LigjeruesiController
      */
     public function index()
     {
-        $ligjeruesit = Ligjeruesi::with(['perdoruesi','lloji'])->select('*')->get();
-        return view('ligjeruesit/index',[
-            'ligjeruesit' => $ligjeruesit
+        $students = Student::with(['user','generation','semester.studyYear'])->select('*')->get();
+        return view('students/index',[
+            'students' => $students
         ]);
     }
 

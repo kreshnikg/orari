@@ -16,7 +16,7 @@
                 </div>
                 <form action="/login" method="POST">
                     <input type="email" name="email" class="form-control mb-3" placeholder="Email" required/>
-                    <input type="password" name="fjalkalimi" class="form-control mb-3" placeholder="Fjalkalimi"
+                    <input type="password" name="password" class="form-control mb-3" placeholder="Fjalkalimi"
                            required/>
                     <div class="form-group form-check">
                         <input type="checkbox" id="check" class="form-check-input"/>

@@ -13,34 +13,54 @@ $router->get('/logout', 'Auth\LoginController@logout');
 #endregion
 
 $router->get('/', function(){
-    redirect('/orari');
+    redirect('/schedule');
 });
 
-$router->get('/orari', 'OrariController@index');
+$router->get('/schedule', 'ScheduleController@index');
 
-$router->get('/lendet', 'LendaController@index');
-$router->get('/lendet/create', 'LendaController@create');
-$router->post('/lendet', 'LendaController@store');
+#region Schedules
+$router->get('/schedules', 'ScheduleController@index');
+$router->post('/schedules', 'ScheduleController@store');
+$router->get('/schedules/create', 'ScheduleController@create');
+$router->get('/schedules/{id}/edit', 'ScheduleController@edit');
+$router->post('/schedules/{id}', 'ScheduleController@update');
+$router->get('/schedules/{id}', 'ScheduleController@show');
+#endregion
 
-$router->get('/studentet', 'StudentiController@index');
-$router->post('/studentet', 'StudentiController@store');
-$router->get('/studentet/create', 'StudentiController@create');
-$router->get('/studentet/{id}/edit', 'StudentiController@edit');
-$router->post('/studentet/{id}', 'StudentiController@update');
-$router->get('/studentet/{id}', 'StudentiController@show');
+#region Subjects
+$router->get('/subjects', 'SubjectController@index');
+$router->post('/subjects', 'SubjectController@store');
+$router->get('/subjects/create', 'SubjectController@create');
+$router->get('/subjects/{id}/edit', 'SubjectController@edit');
+$router->post('/subjects/{id}', 'SubjectController@update');
+$router->get('/subjects/{id}', 'SubjectController@show');
+#endregion
 
-$router->get('/ligjeruesit', 'LigjeruesiController@index');
-$router->post('/ligjeruesit', 'LigjeruesiController@store');
-$router->get('/ligjeruesit/create', 'LigjeruesiController@create');
-$router->get('/ligjeruesit/{id}/edit', 'LigjeruesiController@edit');
-$router->post('/ligjeruesit/{id}', 'LigjeruesiController@update');
-$router->get('/ligjeruesit/{id}', 'LigjeruesiController@show');
+#region Students
+$router->get('/students', 'StudentController@index');
+$router->post('/students', 'StudentController@store');
+$router->get('/students/create', 'StudentController@create');
+$router->get('/students/{id}/edit', 'StudentController@edit');
+$router->post('/students/{id}', 'StudentController@update');
+$router->get('/students/{id}', 'StudentController@show');
+#endregion
 
-$router->get('/users', 'PerdoruesiController@index');
-$router->post('/users', 'PerdoruesiController@store');
-$router->get('/users/create', 'PerdoruesiController@create');
-$router->get('/users/{id}/edit', 'PerdoruesiController@edit');
-$router->post('/users/{id}', 'PerdoruesiController@update');
-$router->get('/users/{id}', 'PerdoruesiController@show');
+#region Teachers
+$router->get('/teachers', 'TeacherController@index');
+$router->post('/teachers', 'TeacherController@store');
+$router->get('/teachers/create', 'TeacherController@create');
+$router->get('/teachers/{id}/edit', 'TeacherController@edit');
+$router->post('/teachers/{id}', 'TeacherController@update');
+$router->get('/teachers/{id}', 'TeacherController@show');
+#endregion
+
+#region Users
+$router->get('/users', 'UsersController@index');
+$router->post('/users', 'UsersController@store');
+$router->get('/users/create', 'UsersController@create');
+$router->get('/users/{id}/edit', 'UsersController@edit');
+$router->post('/users/{id}', 'UsersController@update');
+$router->get('/users/{id}', 'UsersController@show');
+#endregion
 
 $router->checkRoute();

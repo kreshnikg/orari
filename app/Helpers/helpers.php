@@ -145,3 +145,17 @@ function isAuthenticated()
     else
         return false;
 }
+
+/**
+ * Get full date on albanian.
+ * Example: "E hënë, 23 mars 2020".
+ *
+ * @return string
+ */
+function getFullDate()
+{
+    setlocale(LC_ALL,'sq_AL');
+    $date = strftime("%A, %e %B %Y - %H:%M");
+    $utfDate = utf8_encode($date);
+    return ucfirst($utfDate);
+}

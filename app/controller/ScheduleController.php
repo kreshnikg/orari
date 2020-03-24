@@ -4,7 +4,7 @@
 namespace App\Controller;
 
 
-class OrariController
+class ScheduleController
 {
 
     /**
@@ -12,7 +12,7 @@ class OrariController
      */
     public function index()
     {
-        return view('orari/index');
+        return view('schedules/index');
     }
 
     /**

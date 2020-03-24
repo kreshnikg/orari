@@ -3,18 +3,20 @@
 
 namespace App\Controller;
 
-use App\Perdoruesi;
 
-class PerdoruesiController extends BaseController
+use App\Subject;
+
+class SubjectController extends BaseController
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = Perdoruesi::all();
-        return view('index', [
-            'users' => $users
+        $subjects = Subject::all();
+        return view('subjects/index',[
+            'subjects' => $subjects
         ]);
     }
 
@@ -23,7 +25,7 @@ class PerdoruesiController extends BaseController
      */
     public function create()
     {
-        return view('users/create');
+        return view('subjects/create');
     }
 
     /**
@@ -33,16 +35,14 @@ class PerdoruesiController extends BaseController
      */
     public function store($request)
     {
-        $this->validate($request, ['emri', 'mbiemri', 'email', 'fjalkalimi']);
+        $this->validate($request,["title","code"]);
 
-        $user = new Perdoruesi;
-        $user->emri = $request["emri"];
-        $user->mbiemri = $request["mbiemri"];
-        $user->email = $request["email"];
-        $user->fjalkalimi = password_hash($request["fjalkalimi"], PASSWORD_DEFAULT);
-        $user->save();
+        $subject = new Subject;
+        $subject->emertimi = $request["title"];
+        $subject->kodi = $request["code"];
+        $subject->save();
 
-        return redirect('/users');
+        return redirect("/subjects");
     }
 
     /**
@@ -52,7 +52,6 @@ class PerdoruesiController extends BaseController
      */
     public function show($id)
     {
-        die("Show id: $id");
     }
 
     /**
@@ -62,7 +61,6 @@ class PerdoruesiController extends BaseController
      */
     public function edit($id)
     {
-        die("Edit id: $id");
     }
 
     /**
@@ -73,9 +71,6 @@ class PerdoruesiController extends BaseController
      */
     public function update($request, $id)
     {
-        echo "Request:" . json_encode($request) . "<br>";
-        echo "Id: $id" . "<br>";
-        die();
     }
 
     /**

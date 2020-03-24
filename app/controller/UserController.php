@@ -3,20 +3,18 @@
 
 namespace App\Controller;
 
+use App\User;
 
-use App\Studenti;
-
-class StudentiController
+class UserController extends BaseController
 {
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $studentet = Studenti::with(['perdoruesi','gjenerata','semestri.viti'])->select('*')->get();
-        return view('studentet/index',[
-            'studentet' => $studentet
+        $users = User::all();
+        return view('index', [
+            'users' => $users
         ]);
     }
 
@@ -25,6 +23,7 @@ class StudentiController
      */
     public function create()
     {
+        return view('users/create');
     }
 
     /**
@@ -34,6 +33,16 @@ class StudentiController
      */
     public function store($request)
     {
+        $this->validate($request, ['first_name', 'last_name', 'email', 'password']);
+
+        $user = new User;
+        $user->first_name = $request["first_name"];
+        $user->last_name = $request["last_name"];
+        $user->email = $request["email"];
+        $user->password = password_hash($request["password"], PASSWORD_DEFAULT);
+        $user->save();
+
+        return redirect('/users');
     }
 
     /**
@@ -43,6 +52,7 @@ class StudentiController
      */
     public function show($id)
     {
+        die("Show id: $id");
     }
 
     /**
@@ -52,6 +62,7 @@ class StudentiController
      */
     public function edit($id)
     {
+        die("Edit id: $id");
     }
 
     /**
@@ -62,6 +73,9 @@ class StudentiController
      */
     public function update($request, $id)
     {
+        echo "Request:" . json_encode($request) . "<br>";
+        echo "Id: $id" . "<br>";
+        die();
     }
 
     /**
