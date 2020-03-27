@@ -3,42 +3,84 @@
 <head>
     <title>Orari</title>
     <meta charset="utf-8">
-    <script src="/src/js/app.js"></script>
     <link rel="stylesheet" href="/src/css/fontawesome/css/all.css">
     <link rel="stylesheet" type="text/css" href="/src/css/app.css"/>
     <link rel="stylesheet" type="text/css" href="/src/css/bootstrap.css"/>
+    <script src="/src/js/react.js"></script>
+    <script src="/src/js/react-dom.js"></script>
+    <script src="/src/js/babel.js"></script>
+    <script src="/src/js/jquery.min.js"></script>
+    <script src="/src/js/moment.min.js"></script>
+    <script src="/src/js/daterangepicker.min.js"></script>
+    <script src="/src/js/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="/src/css/daterangepicker.css"/>
 </head>
 <body>
+<script type="text/babel">
+    const Clock = () => {
+        const [state, setState] = React.useState("");
+        React.useEffect(() => {
+            setInterval(setTime, 1000);
+        });
+        const setTime = () => {
+            let time = moment().format("dddd, MMMM D YYYY, H:mm:ss");
+            let mappings = [
+                {Monday: "E Hënë"},
+                {Tuesday: "E Martë"},
+                {Wednesday: "E Mërkurë"},
+                {Thursday: "E Enjte"},
+                {Friday: "E Premte"},
+                {Saturday: "E Shtunë"},
+                {Sunday: "E Dielë"},
+                {January: "Janar"},
+                {February: "Shkurt"},
+                {March: "Mars"},
+                {April: "Prill"},
+                {May: "Maj"},
+                {June: "Qershor"},
+                {July: "Korrik"}
+            ];
+            mappings.map((map) => {
+                Object.keys(map).forEach((key) => {
+                    time = time.replace(key, map[key]);
+                });
+            });
+            setState(time)
+        };
+        return <React.Fragment>{state}</React.Fragment>
+    };
+    ReactDOM.render(<Clock/>, document.getElementById('clock'));
+</script>
 <div id="sidebar" class="sidebar">
     <ul class="p-0">
         <li class="d-flex justify-content-center my-3">
             <img src="/storage/img/clock-logo-white.png" width="100"/>
         </li>
-        <?php includeComponent('/components/sidebar-item',[
+        <?php includeComponent('/components/sidebar-item', [
             "href" => "/orari",
             "title" => "Orari",
             "icon" => "far fa-calendar-alt"
-        ],"sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item',[
+        ], "sidebarItem"); ?>
+        <?php includeComponent('/components/sidebar-item', [
             "href" => "/schedules",
             "title" => "Terminet",
             "icon" => "far fa-clock"
-        ],"sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item',[
+        ], "sidebarItem"); ?>
+        <?php includeComponent('/components/sidebar-item', [
             "href" => "/subjects",
             "title" => "Lëndët",
             "icon" => "fas fa-book-open"
-        ],"sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item',[
+        ], "sidebarItem"); ?>
+        <?php includeComponent('/components/sidebar-item', [
             "href" => "/students",
             "title" => "Studentët",
             "icon" => "fas fa-user-graduate"
-        ],"sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item',[
+        ], "sidebarItem"); ?>
+        <?php includeComponent('/components/sidebar-item', [
             "href" => "/teachers",
             "title" => "Ligjëruesit",
             "icon" => "fas fa-chalkboard-teacher"
-        ],"sidebarItem"); ?>
+        ], "sidebarItem"); ?>
         <li class="sidebar-item position-absolute w-100 text-center" style="bottom: 20px">
             <a class="sidebar-link" href="/logout">
                 <i class="fas fa-sign-out-alt fa-fw"></i>
@@ -61,9 +103,7 @@
     </div>
 
     <ul class="profile-container">
-        <li>
-            <?= getFullDate() ?>
-        </li>
+        <li id="clock"></li>
         <li>
             <div class="topbar-divider"></div>
         </li>

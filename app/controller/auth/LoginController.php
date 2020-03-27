@@ -24,13 +24,18 @@ class LoginController extends BaseController
     public function login($request)
     {
         $this->validate($request,['email','password']);
-        $user = User::where('email', '=', $request["email"])->first();
+        $user = User::with(['role'])->where('email', '=', $request["email"])->first();
         $success = false;
         if($user) {
             if (password_verify($request["password"], $user->password)) {
                 $_SESSION["logged_in"] = true;
+                $userData = [
+                    "name" => "$user->first_name $user->last_name",
+                    "user_id" => $user->user_id,
+                    "role" => $user->role->title
+                ];
                 setcookie("auth", "1",time()+3600,"/");
-                setcookie("user", $user->first_name . " " . $user->last_name,time()+3600,"/");
+                setcookie("user", json_encode($userData),time()+3600,"/");
                 $success = true;
             }
         }

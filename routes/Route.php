@@ -12,6 +12,18 @@ class Route
     public $routes = [];
 
     /**
+     * Routes prefix.
+     * @var string
+     */
+    private $prefix = null;
+
+    /**
+     * Routes middleware.
+     * @var array
+     */
+    private $middleware = [];
+
+    /**
      * Convert route uri to regex.
      *
      * @param string $uri
@@ -22,13 +34,13 @@ class Route
         $hasParameters = false;
         $uriArray = array_filter(explode("/", $uri));
         foreach ($uriArray as $key => $value) {
-            if($value[0] == "{"){
+            if ($value[0] == "{") {
                 $uriArray[$key] = "(.*?)";
                 $hasParameters = true;
             }
         }
-        if($hasParameters){
-            $uriWithRegex = "#/" . implode("/",$uriArray) . "$#";
+        if ($hasParameters) {
+            $uriWithRegex = "#/" . implode("/", $uriArray) . "$#";
             return $uriWithRegex;
         }
         return $uri;
@@ -42,10 +54,11 @@ class Route
      * @param string $requestMethod
      * @return bool
      */
-    private function matchRoute($route,$requestUri,$requestMethod){
+    private function matchRoute($route, $requestUri, $requestMethod)
+    {
         $routeUri = $route["uri"];
         $routeUriRegex = $this->getUriWithRegex($routeUri);
-        if($routeUriRegex != $routeUri){
+        if ($routeUriRegex != $routeUri) {
             $routeCheck = preg_match($routeUriRegex, $requestUri);
         } else {
             $routeCheck = $routeUri == $requestUri;
@@ -53,9 +66,10 @@ class Route
         return ($routeCheck && ($route["requestMethod"] == $requestMethod));
     }
 
-    private function excecuteRouteCallback($route,$uriParameters){
+    private function excecuteRouteCallback($route, $uriParameters)
+    {
         $callback = $route["callback"];
-        if($callback != null){
+        if ($callback != null) {
             return $callback(...$uriParameters);
         }
 
@@ -65,10 +79,10 @@ class Route
         $INSTANCE = new $controller();
 
         $methodParameters = array();
-        if($route["requestMethod"] == "POST"){
+        if ($route["requestMethod"] == "POST") {
             array_push($methodParameters, $_POST);
         }
-        if(count($uriParameters) > 0){
+        if (count($uriParameters) > 0) {
             array_push($methodParameters, ...$uriParameters);
         }
         return $INSTANCE->$method(...$methodParameters);
@@ -85,17 +99,16 @@ class Route
         $path = $parsedUrl["path"];
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         foreach ($this->routes as $route) {
-            if ($this->matchRoute($route,$path,$requestMethod)) {
-                if($route["authenticated"]){
-                    if(!isAuthenticated())
-                        redirect('/login');
-                }
+            if ($this->matchRoute($route, $path, $requestMethod)) {
+
+                $this->checkMiddleware($route);
+
                 $uriParameters = $this->getParameters($route["uri"], $path);
 
-                return $this->excecuteRouteCallback($route,$uriParameters);
+                return $this->excecuteRouteCallback($route, $uriParameters);
             }
         }
-        return view('error/404',null,false);
+        redirect('/not-found');
     }
 
     /**
@@ -105,7 +118,7 @@ class Route
      */
     private function addRoute($route)
     {
-        array_push($this->routes,$route);
+        array_push($this->routes, $route);
     }
 
     /**
@@ -114,18 +127,21 @@ class Route
      * @param string $uri
      * @param string $callback
      * @param string $requestMethod
-     * @param boolean $authenticated
+     * @param array $middleware
      * @return void
      */
-    private function registerRoute($uri, $callback, $requestMethod, $authenticated)
+    private function registerRoute($uri, $callback, $requestMethod, $middleware)
     {
+        $uriPrefix = $uri;
+        if ($this->prefix)
+            $uriPrefix = $this->prefix . $uri;
         $route = [
-            'uri' => $uri,
+            'uri' => $uriPrefix,
             'requestMethod' => $requestMethod,
-            'authenticated' => $authenticated,
+            'middleware' => $middleware,
             'callback' => null
         ];
-        if(is_callable($callback))
+        if (is_callable($callback))
             $route["callback"] = $callback;
         else {
             list($controller, $method) = explode("@", $callback);
@@ -135,6 +151,11 @@ class Route
         $this->addRoute($route);
     }
 
+    /**
+     * @param string $uri
+     * @param string $requestUri
+     * @return array
+     */
     private function getParameters($uri, $requestUri)
     {
         $uriArray = array_filter(explode("/", $uri));
@@ -142,14 +163,14 @@ class Route
 
         $ids = array();
         foreach ($uriArray as $key => $value) {
-            if($value[0] == "{"){
+            if ($value[0] == "{") {
                 array_push($ids, $key);
             }
         }
 
         $parameters = array();
-        if(count($ids) > 0) {
-            foreach($ids as $id){
+        if (count($ids) > 0) {
+            foreach ($ids as $id) {
                 array_push($parameters, $requestUriArray[$id]);
             }
         }
@@ -158,15 +179,78 @@ class Route
     }
 
     /**
+     * @param string $prefix
+     * @return $this
+     */
+    public function prefix($prefix)
+    {
+        $this->prefix = $prefix;
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     * @return $this
+     */
+    public function group($callback)
+    {
+        $callback();
+        $this->prefix = null;
+        array_pop($this->middleware);
+    }
+
+    /**
+     * @param $middlewares
+     * @return $this
+     */
+    public function middleware($middlewares)
+    {
+        $check = false;
+        foreach($middlewares as $middleware){
+            foreach($this->middleware as $middlew){
+                if(in_array($middleware,$middlew))
+                    $check = true;
+            }
+        }
+        if(!$check)
+            array_push($this->middleware, $middlewares);
+        return $this;
+    }
+
+    private function checkMiddleware($route)
+    {
+        $middlewares = $route["middleware"];
+        foreach ($middlewares as $middlewareGroup) {
+            foreach ($middlewareGroup as $middleware) {
+                //Authentication
+                if ($middleware == "auth") {
+                    if (!isAuthenticated())
+                        redirect('/login');
+                }
+                //Roles
+                if ($middleware == "admin") {
+                    if (user()->role != "admin")
+                        redirect('/');
+                } else if ($middleware == "teacher") {
+                    if (user()->role != "teacher")
+                        redirect('/');
+                } else if ($middleware == "student") {
+                    if (user()->role != "student")
+                        redirect('/');
+                }
+            }
+        }
+    }
+
+    /**
      * Define a GET route.
      *
      * @param string $uri
      * @param string $callback
-     * @param boolean $authenticated
      */
-    public function get($uri,$callback, $authenticated = true)
+    public function get($uri, $callback)
     {
-        $this->registerRoute($uri,$callback,"GET", $authenticated);
+        $this->registerRoute($uri, $callback, "GET", $this->middleware);
     }
 
     /**
@@ -174,10 +258,9 @@ class Route
      *
      * @param string $uri
      * @param string $callback
-     * @param boolean $authenticated
      */
-    public function post($uri,$callback, $authenticated = true)
+    public function post($uri, $callback)
     {
-        $this->registerRoute($uri,$callback,"POST", $authenticated);
+        $this->registerRoute($uri, $callback, "POST", $this->middleware);
     }
 }

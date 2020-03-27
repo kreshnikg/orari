@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Subject;
+use App\User;
 
 class SubjectController extends BaseController
 {
