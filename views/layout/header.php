@@ -12,14 +12,18 @@
     <script src="/src/js/jquery.min.js"></script>
     <script src="/src/js/moment.min.js"></script>
     <script src="/src/js/daterangepicker.min.js"></script>
+    <script src="/src/js/sweetalert.js"></script>
     <script src="/src/js/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/src/css/daterangepicker.css"/>
 </head>
 <body>
 <script type="text/babel">
     const Clock = () => {
-        const [state, setState] = React.useState("");
+        const [state, setState] = React.useState(null);
         React.useEffect(() => {
+            if(!state){
+                setTime();
+            }
             setInterval(setTime, 1000);
         });
         const setTime = () => {
@@ -51,35 +55,40 @@
     };
     ReactDOM.render(<Clock/>, document.getElementById('clock'));
 </script>
-<div id="sidebar" class="sidebar">
+<div id="sidebar" class="sidebar border-0">
     <ul class="p-0">
         <li class="d-flex justify-content-center my-3">
             <img src="/storage/img/clock-logo-white.png" width="100"/>
         </li>
-        <?php includeComponent('/components/sidebar-item', [
-            "href" => "/orari",
+        <?php if(userHasRole(["teacher","student"])) includeComponent('/components/sidebar-item', [
+            "href" => "/" . user()->role . "/orari",
             "title" => "Orari",
             "icon" => "far fa-calendar-alt"
         ], "sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item', [
-            "href" => "/schedules",
+        <?php if(userHasRole(["admin"])) includeComponent('/components/sidebar-item', [
+            "href" => "/admin/schedules",
             "title" => "Terminet",
             "icon" => "far fa-clock"
         ], "sidebarItem"); ?>
         <?php includeComponent('/components/sidebar-item', [
-            "href" => "/subjects",
+            "href" => "/" . user()->role . "/subjects",
             "title" => "Lëndët",
             "icon" => "fas fa-book-open"
         ], "sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item', [
-            "href" => "/students",
+        <?php if(userHasRole(["teacher","admin"])) includeComponent('/components/sidebar-item', [
+            "href" => "/" . user()->role . "/students",
             "title" => "Studentët",
             "icon" => "fas fa-user-graduate"
         ], "sidebarItem"); ?>
-        <?php includeComponent('/components/sidebar-item', [
-            "href" => "/teachers",
+        <?php if(userHasRole("admin")) includeComponent('/components/sidebar-item', [
+            "href" => "/admin/teachers",
             "title" => "Ligjëruesit",
             "icon" => "fas fa-chalkboard-teacher"
+        ], "sidebarItem"); ?>
+        <?php if(userHasRole("admin")) includeComponent('/components/sidebar-item', [
+            "href" => "/admin/admins",
+                "title" => "Administratorët",
+            "icon" => "fas fa-user-cog"
         ], "sidebarItem"); ?>
         <li class="sidebar-item position-absolute w-100 text-center" style="bottom: 20px">
             <a class="sidebar-link" href="/logout">
@@ -90,11 +99,7 @@
     </ul>
 </div>
 
-<div id="topbar" class="topbar">
-    <a onclick="" id="sidebarToggle" class="menu">
-        <i class="fa fa-bars"></i>
-    </a>
-
+<div id="topbar" class="topbar my-shadow">
     <div class="searchbar">
         <form method="GET" action="">
             <input type="text" name="search" placeholder="Kërko" class="searchbar-input"/>
@@ -112,5 +117,5 @@
         </li>
     </ul>
 </div>
-<div class="content">
+<div class="content mb-5">
     <div class="container-fluid">

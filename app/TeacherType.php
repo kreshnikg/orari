@@ -4,7 +4,7 @@
 namespace App;
 
 
-use Database\Model;
+use App\Database\Model;
 
 class TeacherType extends Model
 {

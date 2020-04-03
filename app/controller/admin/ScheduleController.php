@@ -1,12 +1,11 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 
-use App\Teacher;
-
-class TeacherController
+class ScheduleController extends BaseController
 {
 
     /**
@@ -14,10 +13,7 @@ class TeacherController
      */
     public function index()
     {
-        $teachers = Teacher::with(['user','type'])->select('*')->get();
-        return view('teachers/index',[
-            'teachers' => $teachers
-        ]);
+        return view('schedules/index');
     }
 
     /**

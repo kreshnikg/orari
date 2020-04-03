@@ -1,8 +1,8 @@
 <?php
 
-namespace Route;
+namespace App\Router;
 
-class Route
+class Router
 {
 
     /**
@@ -108,7 +108,7 @@ class Route
                 return $this->excecuteRouteCallback($route, $uriParameters);
             }
         }
-        redirect('/not-found');
+        return view("error/404",null,false);
     }
 
     /**

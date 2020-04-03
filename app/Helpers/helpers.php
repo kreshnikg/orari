@@ -179,3 +179,20 @@ function user()
 {
     return json_decode(getCookie("user"));
 }
+
+/**
+ * @param array|string $roles
+ * @return bool
+ */
+function userHasRole($roles)
+{
+    $hasRole = false;
+    $userRole = user()->role;
+    if(is_array($roles)){
+        if(in_array($userRole,$roles))
+            $hasRole = true;
+    } else
+        if($roles == $userRole)
+            $hasRole = true;
+    return $hasRole;
+}

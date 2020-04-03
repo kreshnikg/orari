@@ -1,5 +1,5 @@
 <div class="w-25">
-    <form method="POST" action="/admin/students">
+    <form method="POST" action="/admin/admins">
         <div class="form-group">
             <label for="first_name">Emri</label>
             <input class="form-control" type="text" name="first_name" id="first_name" required/>
@@ -15,26 +15,6 @@
         <div class="form-group">
             <label for="password">Fjalkalimi</label>
             <input class="form-control" type="password" name="password" id="password" required/>
-        </div>
-        <div class="form-group">
-            <label for="generation">Gjenerata</label>
-            <input readonly
-                   disabled
-                   class="form-control"
-                   type="text"
-                   name="generation"
-                   id="generation"
-                   value="<?= $generation->description ?>" />
-        </div>
-        <div class="form-group">
-            <label for="semester">Semestri</label>
-            <input readonly
-                   disabled
-                   class="form-control"
-                   type="text"
-                   name="semester"
-                   id="semester"
-                   value="<?= $semester->description ?>" />
         </div>
         <button type="submit" class="btn btn-primary">Ruaj</button>
     </form>

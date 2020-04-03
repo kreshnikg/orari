@@ -3,7 +3,7 @@
 
 namespace App;
 
-use Database\Model;
+use App\Database\Model;
 
 class User extends Model
 {

@@ -4,9 +4,12 @@
 namespace App\Controller;
 
 
+use App\Generation;
+use App\Role;
+use App\Semester;
 use App\Student;
 
-class StudentController
+class StudentController extends BaseController
 {
 
     /**
@@ -25,6 +28,12 @@ class StudentController
      */
     public function create()
     {
+        $generation = Generation::where('year','=',date('Y'))->first();
+        $semester = Semester::where('number','=',1)->first();
+        return view("students/create", [
+            'generation' => $generation,
+            'semester' => $semester
+        ]);
     }
 
     /**
@@ -34,6 +43,26 @@ class StudentController
      */
     public function store($request)
     {
+        $this->validate($request, ["first_name","last_name","email","password"]);
+        $role = Role::where('title','=','student')->first();
+        $generation = Generation::where('year','=',date('Y'))->first();
+        $semester = Semester::where('number','=',1)->first();
+
+        $userId = UserController::createUser(
+            $request["first_name"],
+            $request["last_name"],
+            $request["email"],
+            $request["password"],
+            $role->role_id
+        );
+
+        $student = new Student;
+        $student->student_id = $userId;
+        $student->semester_id = $semester->semester_id;
+        $student->generation_id = $generation->generation_id;
+        $student->save();
+
+        return redirect("/admin/students");
     }
 
     /**
@@ -71,5 +100,7 @@ class StudentController
      */
     public function destroy($id)
     {
+        Student::delete($id);
+        return redirect("/admin/students");
     }
 }

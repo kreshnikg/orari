@@ -4,6 +4,7 @@
 namespace App\Controller\Auth;
 
 use App\Controller\BaseController;
+use App\Controller\UserController;
 use App\User;
 
 class RegisterController extends BaseController
@@ -27,12 +28,16 @@ class RegisterController extends BaseController
     {
         $this->validate($request,['first_name','last_name','email','password']);
 
-        $user = new User;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
-        $user->password = password_hash($request->password,PASSWORD_DEFAULT);
-        $user->save();
+        $exists = User::where('email', '=', $request['email'])->first();
+        if($exists)
+            response("Perdoruesi ekziston.",422);
+
+        UserController::createUser(
+            $request["first_name"],
+            $request["last_name"],
+            $request["email"],
+            $request["password"]
+        );
 
         $login = new LoginController;
         return $login->login($request);

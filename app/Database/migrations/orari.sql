@@ -67,7 +67,7 @@ CREATE TABLE `group` (
 
 CREATE TABLE `generation` (
 	generation_id int NOT NULL AUTO_INCREMENT,
-	title varchar(255),
+	year int UNIQUE NOT NULL,
 	description varchar(255),
 	created_at timestamp,
 	updated_at timestamp,
@@ -134,7 +134,8 @@ CREATE TABLE `subject` (
 	created_at timestamp,
 	updated_at timestamp,
 	PRIMARY KEY (subject_id),
-	FOREIGN KEY (subject_type_id) REFERENCES `subject_type` (subject_type_id)
+	FOREIGN KEY (subject_type_id) REFERENCES `subject_type` (subject_type_id),
+	FOREIGN KEY (semester_id) REFERENCES `semester` (semester_id)
 );
 
 CREATE TABLE `classroom_type` (
@@ -189,7 +190,7 @@ CREATE TABLE `schedule` (
 
 #Roles
 INSERT INTO `role` (title,description,created_at,updated_at) values ('admin','Administrator',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
-INSERT INTO `role` (title,description,created_at,updated_at) values ('ligjerues','Ligjërues',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `role` (title,description,created_at,updated_at) values ('teacher','Ligjërues',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 INSERT INTO `role` (title,description,created_at,updated_at) values ('student','Student',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 #Users
@@ -219,7 +220,9 @@ INSERT INTO `semester` (number,description,study_year_id,created_at,updated_at) 
 INSERT INTO `semester` (number,description,study_year_id,created_at,updated_at) values (8,'Semestri VIII',4,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 #Generations
-INSERT INTO `generation` (title,description,created_at,updated_at) values ('2018/2019','2018/2019',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `generation` (year,description,created_at,updated_at) values (2018,'2018/2019',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `generation` (year,description,created_at,updated_at) values (2019,'2019/2020',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `generation` (year,description,created_at,updated_at) values (2020,'2020/2021',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 
 #Students
 INSERT INTO `student` (student_id,generation_id,semester_id,created_at,updated_at) values (2,1,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
@@ -272,7 +275,7 @@ INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated
 #semester2
 INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Algoritmet dhe strukturat e te dhenave','15-03B06S-2O01',1,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Hyrje ne web gjuhet dhe teknologjite','15-03B06S-2O02',1,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
-INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Matematike Diskrete','15-03B06S-2O03',1,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Matematikë Diskrete','15-03B06S-2O03',1,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Sisteme operative dhe menaxhimi I sistemeve','15-03B06S-2O04',1,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Anglisht per shkenca kompjuterike II','15-03B06S-2Z06',2,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
 INSERT INTO `subject` (title,code,subject_type_id,semester_id,created_at,updated_at) values ('Protokollet e internetit','15-03B06S-2Z05',2,2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);

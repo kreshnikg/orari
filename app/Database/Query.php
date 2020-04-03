@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace App\Database;
 
 use http\Exception\InvalidArgumentException;
 
@@ -51,7 +51,7 @@ trait Query {
     private function getKeysForUpdateQuery($keys){
         $keysString = implode(" = ?, ", $keys) . " = ?";
         if ($this->timestamps()) {
-            $keysString .= " ,$this->UPDATED_AT = " . date("d-m-Y");
+            $keysString .= " ,$this->UPDATED_AT = '" . date("Y-m-d H:i:s") . "'";
         }
         return $keysString;
     }
@@ -63,7 +63,10 @@ trait Query {
      */
     private function checkComparisonOperator($operator)
     {
-        $whitelist = ["=","!=","<>","<","<=",">",">=","<=>","IS","IS NOT", "NOT"];
+        $whitelist = [
+            "=","!=","<>","<","<=",">",">=","<=>",
+            "IS","is","IS NOT","is not","NOT","not","LIKE","like"
+        ];
         if (!in_array($operator, $whitelist)) {
             response("Unsupported mysql operator: '$operator'",500);
         }
@@ -157,7 +160,7 @@ trait Query {
 
     /**
      *
-     * @return false|\mysqli_result
+     * @return integer|false|\mysqli_result
      */
     private function excecuteQuery()
     {
@@ -178,6 +181,10 @@ trait Query {
         }
         $results = $query->get_result();
         $this->connection->close();
+
+        if($query->insert_id > 0)
+            return $query->insert_id;
+
         return $results;
     }
 
@@ -191,7 +198,7 @@ trait Query {
         $this->addValue(...$values);
         if ($this->timestamps()) {
             array_push($keys, $this->CREATED_AT, $this->UPDATED_AT);
-            $date = date("Y-m-d");
+            $date = date("Y-m-d H:i:s");
             $this->addValue($date,$date);
         }
         $keysString = implode(",", $keys);

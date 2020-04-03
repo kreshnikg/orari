@@ -9,14 +9,10 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Database\\" : "database/"
+            "App\\": "app/"
         },
         "classmap": [
-            "database",
-            "app",
-            "app/controller",
-            "routes"
+            "app"
         ],
         "files": [
             "app\/Helpers\/helpers.php"

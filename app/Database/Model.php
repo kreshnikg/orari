@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace App\Database;
 
 class Model
 {
@@ -76,14 +76,13 @@ class Model
      *
      * @param int $id
      * @param array|object $data
-     * @return string
+     * @return integer
      */
     public static function update($id, $data)
     {
         $INSTANCE = new static;
         $INSTANCE->updateQuery($data)->where($INSTANCE->primaryKey, '=', $id);
-        $INSTANCE->excecuteQuery();
-        return "success";
+        return $INSTANCE->excecuteQuery();
     }
 
     /**
@@ -149,16 +148,16 @@ class Model
     }
 
     /**
-     * Save model on database
+     * Save model on database.
+     * Returns the inserted model id.
      *
-     * @return string
+     * @return integer
      */
     public function save()
     {
         $thisArray = get_object_vars($this);
         $data = filterVars($thisArray);
-        $this->insert($data);
-        return "success";
+        return $this->insert($data);
     }
 
     /**
@@ -170,7 +169,7 @@ class Model
     private function insert($data){
         $keys = array_keys($data);
         $values = array_values($data);
-        $this->insertQuery($keys,$values)->excecuteQuery();
+        return $this->insertQuery($keys,$values)->excecuteQuery();
     }
 
     /**
@@ -199,6 +198,7 @@ class Model
     /**
      * Get the first record of model on database.
      *
+     * @return $this
      */
     public function first()
     {

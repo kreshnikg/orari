@@ -34,15 +34,37 @@ class UserController extends BaseController
     public function store($request)
     {
         $this->validate($request, ['first_name', 'last_name', 'email', 'password']);
-
-        $user = new User;
-        $user->first_name = $request["first_name"];
-        $user->last_name = $request["last_name"];
-        $user->email = $request["email"];
-        $user->password = password_hash($request["password"], PASSWORD_DEFAULT);
-        $user->save();
-
+        self::createUser(
+            $request['first_name'],
+            $request['last_name'],
+            $request['email'],
+            $request['password']
+        );
         return redirect('/users');
+    }
+
+    /**
+     * Create user and return user_id.
+     *
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $email
+     * @param string $password
+     * @param integer|null $roleId
+     * @return string
+     */
+    public static function createUser($firstName,$lastName,$email,$password,$roleId = null)
+    {
+        $user = new User;
+        $user->first_name = $firstName;
+        $user->last_name = $lastName;
+        $user->email = $email;
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
+
+        if($roleId != null)
+            $user->role_id = $roleId;
+
+        return $user->save();
     }
 
     /**

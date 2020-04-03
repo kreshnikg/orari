@@ -1,8 +1,8 @@
 <?php
 
-use Route\Route;
+use App\Router\Router;
 
-$router = new Route();
+$router = new Router();
 
 $router->get('/register', 'Auth\RegisterController@form');
 $router->post('/register', 'Auth\RegisterController@register');
@@ -29,65 +29,57 @@ $router->middleware(['auth'])->group(function () use ($router) {
 
     $router->middleware(['admin'])->prefix("/admin")->group(function () use ($router) {
         #region Subjects
-        $router->get('/subjects', 'SubjectController@index');
-        $router->post('/subjects', 'SubjectController@store');
-        $router->get('/subjects/create', 'SubjectController@create');
-        $router->get('/subjects/{id}/edit', 'SubjectController@edit');
-        $router->post('/subjects/{id}', 'SubjectController@update');
-        $router->get('/subjects/{id}', 'SubjectController@show');
+        $router->get('/subjects', 'Admin\SubjectController@index');
+        $router->post('/subjects', 'Admin\SubjectController@store');
+        $router->get('/subjects/create', 'Admin\SubjectController@create');
+        $router->get('/subjects/{id}/edit', 'Admin\SubjectController@edit');
+        $router->get('/subjects/{id}/delete', 'Admin\SubjectController@destroy');
+        $router->post('/subjects/{id}', 'Admin\SubjectController@update');
+        $router->get('/subjects/{id}', 'Admin\SubjectController@show');
+        #endregion
+
+        #region Students
+        $router->get('/students', 'StudentController@index');
+        $router->post('/students', 'StudentController@store');
+        $router->get('/students/create', 'StudentController@create');
+        $router->get('/students/{id}/edit', 'StudentController@edit');
+        $router->get('/students/{id}/delete', 'StudentController@destroy');
+        $router->post('/students/{id}', 'StudentController@update');
+        $router->get('/students/{id}', 'StudentController@show');
+        #endregion
+
+        #region Teachers
+        $router->get('/teachers', 'Admin\TeacherController@index');
+        $router->post('/teachers', 'Admin\TeacherController@store');
+        $router->get('/teachers/create', 'Admin\TeacherController@create');
+        $router->get('/teachers/{id}/edit', 'Admin\TeacherController@edit');
+        $router->get('/teachers/{id}/delete', 'Admin\TeacherController@destroy');
+        $router->post('/teachers/{id}', 'Admin\TeacherController@update');
+        $router->get('/teachers/{id}', 'Admin\TeacherController@show');
+        #endregion
+
+        #region Administrators
+        $router->get('/admins', 'Admin\AdminController@index');
+        $router->post('/admins', 'Admin\AdminController@store');
+        $router->get('/admins/create', 'Admin\AdminController@create');
+        $router->get('/admins/{id}/edit', 'Admin\AdminController@edit');
+        $router->get('/admins/{id}/delete', 'Admin\AdminController@destroy');
+        $router->post('/admins/{id}', 'Admin\AdminController@update');
+        $router->get('/admins/{id}', 'Admin\AdminController@show');
         #endregion
     });
 
     $router->middleware(['teacher'])->prefix("/teacher")->group(function () use ($router) {
         #region Subjects
         $router->get('/subjects', 'SubjectController@index');
-        $router->post('/subjects', 'SubjectController@store');
-        $router->get('/subjects/create', 'SubjectController@create');
-        $router->get('/subjects/{id}/edit', 'SubjectController@edit');
-        $router->post('/subjects/{id}', 'SubjectController@update');
         $router->get('/subjects/{id}', 'SubjectController@show');
         #endregion
+
+        #region Students
+        $router->get('/students', 'StudentController@index');
+        $router->get('/students/{id}', 'StudentController@show');
+        #endregion
     });
-
-    #region Subjects
-    $router->get('/subjects', 'SubjectController@index');
-    $router->post('/subjects', 'SubjectController@store');
-    $router->get('/subjects/create', 'SubjectController@create');
-    $router->get('/subjects/{id}/edit', 'SubjectController@edit');
-    $router->post('/subjects/{id}', 'SubjectController@update');
-    $router->get('/subjects/{id}', 'SubjectController@show');
-    #endregion
-
-    #region Students
-    $router->get('/students', 'StudentController@index');
-    $router->post('/students', 'StudentController@store');
-    $router->get('/students/create', 'StudentController@create');
-    $router->get('/students/{id}/edit', 'StudentController@edit');
-    $router->post('/students/{id}', 'StudentController@update');
-    $router->get('/students/{id}', 'StudentController@show');
-    #endregion
-
-    #region Teachers
-    $router->get('/teachers', 'TeacherController@index');
-    $router->post('/teachers', 'TeacherController@store');
-    $router->get('/teachers/create', 'TeacherController@create');
-    $router->get('/teachers/{id}/edit', 'TeacherController@edit');
-    $router->post('/teachers/{id}', 'TeacherController@update');
-    $router->get('/teachers/{id}', 'TeacherController@show');
-    #endregion
-
-    #region Users
-    $router->get('/users', 'UsersController@index');
-    $router->post('/users', 'UsersController@store');
-    $router->get('/users/create', 'UsersController@create');
-    $router->get('/users/{id}/edit', 'UsersController@edit');
-    $router->post('/users/{id}', 'UsersController@update');
-    $router->get('/users/{id}', 'UsersController@show');
-    #endregion
-});
-
-$router->get("/not-found",function(){
-    return view('error/404', null, false);
 });
 
 $router->checkRoute();

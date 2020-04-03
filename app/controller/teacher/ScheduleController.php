@@ -1,13 +1,10 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Teacher;
 
 
-use App\Subject;
-use App\User;
-
-class SubjectController extends BaseController
+class ScheduleController
 {
 
     /**
@@ -15,10 +12,7 @@ class SubjectController extends BaseController
      */
     public function index()
     {
-        $subjects = Subject::all();
-        return view('subjects/index',[
-            'subjects' => $subjects
-        ]);
+        return view('schedules/index');
     }
 
     /**
@@ -26,7 +20,6 @@ class SubjectController extends BaseController
      */
     public function create()
     {
-        return view('subjects/create');
     }
 
     /**
@@ -36,14 +29,6 @@ class SubjectController extends BaseController
      */
     public function store($request)
     {
-        $this->validate($request,["title","code"]);
-
-        $subject = new Subject;
-        $subject->emertimi = $request["title"];
-        $subject->kodi = $request["code"];
-        $subject->save();
-
-        return redirect("/subjects");
     }
 
     /**
