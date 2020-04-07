@@ -86,8 +86,8 @@ CREATE TABLE `study_year` (
 CREATE TABLE `semester` (
 	semester_id int NOT NULL AUTO_INCREMENT,
 	number int,
-	study_year_id INT,
 	description varchar(255),
+	study_year_id INT,
 	created_at timestamp,
 	updated_at timestamp,
 	PRIMARY KEY (semester_id),

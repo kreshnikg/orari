@@ -8,6 +8,7 @@ use App\Controller\UserController;
 use App\Role;
 use App\Teacher;
 use App\TeacherType;
+use App\User;
 
 class TeacherController extends BaseController
 {
@@ -97,18 +98,22 @@ class TeacherController extends BaseController
      */
     public function update($request, $id)
     {
-        $this->validate($request,["first_name","last_name","email","password","teacher_type"]);
+        $this->validate($request,["first_name","last_name","email","teacher_type"]);
         $teacherType = TeacherType::find($request["teacher_type"]);
 
-        Teacher::update($id, [
+        User::update($id, [
             'first_name' => $request["first_name"],
             'last_name' => $request["last_name"],
-            'email' => $request["email"],
-            'password' => password_hash($request["password"],PASSWORD_DEFAULT),
-            'teacher_type' => $teacherType->teacher_type_id,
+            'email' => $request["email"]
         ]);
 
-        return redirect("/teachers");
+        Teacher::update($id, [
+            'teacher_type_id' => $teacherType->teacher_type_id
+        ]);
+
+        return redirect("/admin/teachers",[
+            "success" => "Ndryshimet u ruajtën me sukses."
+        ]);
     }
 
     /**

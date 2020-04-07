@@ -25,7 +25,7 @@ class BaseController
             foreach($notSet as $ns){
                 $validationMessage->$ns = "Kjo fushë duhet të plotësohet patjeter";
             }
-            response($validationMessage,422);
+            redirectBack($validationMessage);
         }
     }
 }

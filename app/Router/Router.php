@@ -9,19 +9,19 @@ class Router
      * Application routes.
      * @var array
      */
-    public $routes = [];
+    public static $routes = [];
 
     /**
      * Routes prefix.
      * @var string
      */
-    private $prefix = null;
+    private static $prefix = null;
 
     /**
      * Routes middleware.
      * @var array
      */
-    private $middleware = [];
+    private static $middleware = [];
 
     /**
      * Convert route uri to regex.
@@ -29,7 +29,7 @@ class Router
      * @param string $uri
      * @return string
      */
-    private function getUriWithRegex($uri)
+    private static function getUriWithRegex($uri)
     {
         $hasParameters = false;
         $uriArray = array_filter(explode("/", $uri));
@@ -54,10 +54,10 @@ class Router
      * @param string $requestMethod
      * @return bool
      */
-    private function matchRoute($route, $requestUri, $requestMethod)
+    private static function matchRoute($route, $requestUri, $requestMethod)
     {
         $routeUri = $route["uri"];
-        $routeUriRegex = $this->getUriWithRegex($routeUri);
+        $routeUriRegex = self::getUriWithRegex($routeUri);
         if ($routeUriRegex != $routeUri) {
             $routeCheck = preg_match($routeUriRegex, $requestUri);
         } else {
@@ -66,7 +66,7 @@ class Router
         return ($routeCheck && ($route["requestMethod"] == $requestMethod));
     }
 
-    private function excecuteRouteCallback($route, $uriParameters)
+    private static function excecuteRouteCallback($route, $uriParameters)
     {
         $callback = $route["callback"];
         if ($callback != null) {
@@ -93,19 +93,19 @@ class Router
      *
      * @return mixed
      */
-    public function checkRoute()
+    public static function checkRoute()
     {
         $parsedUrl = parse_url($_SERVER["REQUEST_URI"]);
         $path = $parsedUrl["path"];
         $requestMethod = $_SERVER["REQUEST_METHOD"];
-        foreach ($this->routes as $route) {
-            if ($this->matchRoute($route, $path, $requestMethod)) {
+        foreach (self::$routes as $route) {
+            if (self::matchRoute($route, $path, $requestMethod)) {
 
-                $this->checkMiddleware($route);
+                self::checkMiddleware($route);
 
-                $uriParameters = $this->getParameters($route["uri"], $path);
+                $uriParameters = self::getParameters($route["uri"], $path);
 
-                return $this->excecuteRouteCallback($route, $uriParameters);
+                return self::excecuteRouteCallback($route, $uriParameters);
             }
         }
         return view("error/404",null,false);
@@ -116,9 +116,9 @@ class Router
      *
      * @param object|array $route
      */
-    private function addRoute($route)
+    private static function addRoute($route)
     {
-        array_push($this->routes, $route);
+        array_push(self::$routes, $route);
     }
 
     /**
@@ -130,11 +130,11 @@ class Router
      * @param array $middleware
      * @return void
      */
-    private function registerRoute($uri, $callback, $requestMethod, $middleware)
+    private static function registerRoute($uri, $callback, $requestMethod, $middleware)
     {
         $uriPrefix = $uri;
-        if ($this->prefix)
-            $uriPrefix = $this->prefix . $uri;
+        if (self::$prefix)
+            $uriPrefix = self::$prefix . $uri;
         $route = [
             'uri' => $uriPrefix,
             'requestMethod' => $requestMethod,
@@ -148,7 +148,7 @@ class Router
             $route['controller'] = $controller;
             $route['method'] = $method;
         }
-        $this->addRoute($route);
+        self::addRoute($route);
     }
 
     /**
@@ -156,7 +156,7 @@ class Router
      * @param string $requestUri
      * @return array
      */
-    private function getParameters($uri, $requestUri)
+    private static function getParameters($uri, $requestUri)
     {
         $uriArray = array_filter(explode("/", $uri));
         $requestUriArray = array_filter(explode("/", $requestUri));
@@ -184,7 +184,7 @@ class Router
      */
     public function prefix($prefix)
     {
-        $this->prefix = $prefix;
+        self::$prefix = $prefix;
         return $this;
     }
 
@@ -195,29 +195,29 @@ class Router
     public function group($callback)
     {
         $callback();
-        $this->prefix = null;
-        array_pop($this->middleware);
+        self::$prefix = null;
+        array_pop(self::$middleware);
     }
 
     /**
      * @param $middlewares
      * @return $this
      */
-    public function middleware($middlewares)
+    public static function middleware($middlewares)
     {
         $check = false;
         foreach($middlewares as $middleware){
-            foreach($this->middleware as $middlew){
+            foreach(self::$middleware as $middlew){
                 if(in_array($middleware,$middlew))
                     $check = true;
             }
         }
         if(!$check)
-            array_push($this->middleware, $middlewares);
-        return $this;
+            array_push(self::$middleware, $middlewares);
+        return new static;
     }
 
-    private function checkMiddleware($route)
+    private static function checkMiddleware($route)
     {
         $middlewares = $route["middleware"];
         foreach ($middlewares as $middlewareGroup) {
@@ -248,9 +248,9 @@ class Router
      * @param string $uri
      * @param string $callback
      */
-    public function get($uri, $callback)
+    public static function get($uri, $callback)
     {
-        $this->registerRoute($uri, $callback, "GET", $this->middleware);
+        self::registerRoute($uri, $callback, "GET", self::$middleware);
     }
 
     /**
@@ -259,8 +259,8 @@ class Router
      * @param string $uri
      * @param string $callback
      */
-    public function post($uri, $callback)
+    public static function post($uri, $callback)
     {
-        $this->registerRoute($uri, $callback, "POST", $this->middleware);
+        self::registerRoute($uri, $callback, "POST", self::$middleware);
     }
 }

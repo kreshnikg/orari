@@ -29,14 +29,19 @@ class RegisterController extends BaseController
         $this->validate($request,['first_name','last_name','email','password']);
 
         $exists = User::where('email', '=', $request['email'])->first();
-        if($exists)
-            response("Perdoruesi ekziston.",422);
+
+        if($exists){
+            return redirectBack([
+                "error" => "Email i dhënë është në përdorim."
+            ]);
+        }
 
         UserController::createUser(
             $request["first_name"],
             $request["last_name"],
             $request["email"],
-            $request["password"]
+            $request["password"],
+            3
         );
 
         $login = new LoginController;

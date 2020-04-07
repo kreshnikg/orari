@@ -13,6 +13,7 @@
     <script src="/src/js/moment.min.js"></script>
     <script src="/src/js/daterangepicker.min.js"></script>
     <script src="/src/js/sweetalert.js"></script>
+    <script src="/src/js/bootstrap.min.js"></script>
     <script src="/src/js/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/src/css/daterangepicker.css"/>
 </head>
@@ -27,29 +28,9 @@
             setInterval(setTime, 1000);
         });
         const setTime = () => {
-            let time = moment().format("dddd, MMMM D YYYY, H:mm:ss");
-            let mappings = [
-                {Monday: "E Hënë"},
-                {Tuesday: "E Martë"},
-                {Wednesday: "E Mërkurë"},
-                {Thursday: "E Enjte"},
-                {Friday: "E Premte"},
-                {Saturday: "E Shtunë"},
-                {Sunday: "E Dielë"},
-                {January: "Janar"},
-                {February: "Shkurt"},
-                {March: "Mars"},
-                {April: "Prill"},
-                {May: "Maj"},
-                {June: "Qershor"},
-                {July: "Korrik"}
-            ];
-            mappings.map((map) => {
-                Object.keys(map).forEach((key) => {
-                    time = time.replace(key, map[key]);
-                });
-            });
-            setState(time)
+            let time = moment().format("dddd, D MMMM YYYY, H:mm:ss");
+            let timeAl = calendarToAl(time);
+            setState(timeAl)
         };
         return <React.Fragment>{state}</React.Fragment>
     };
@@ -119,3 +100,19 @@
 </div>
 <div class="content mb-5">
     <div class="container-fluid">
+        <?php if($message = getRedirectMessages("success")) : ?>
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <?= $message ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php endif ?>
+        <?php if($message = getRedirectMessages("error")) : ?>
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <?= $message ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <?php endif ?>

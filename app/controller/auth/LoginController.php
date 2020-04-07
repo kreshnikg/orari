@@ -42,7 +42,9 @@ class LoginController extends BaseController
         if($success){
             redirect('/');
         } else {
-            response("Email ose fjalkalimi është gabim.",422);
+            redirectBack([
+                "error" => "Email ose fjalkalimi është gabim."
+            ]);
         }
     }
 

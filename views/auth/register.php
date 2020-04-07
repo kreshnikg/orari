@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Login</title>
+    <title>Register</title>
     <link rel="stylesheet" type="text/css" href="/src/css/app.css"/>
     <link rel="stylesheet" type="text/css" href="/src/css/bootstrap.css"/>
 </head>
@@ -13,8 +13,13 @@
                 <div class="text-center">
                     <img src="/storage/img/clock-logo.png" width="125" />
                     <h4 class="h4 mb-4">Mirë se erdhët!</h4>
+                    <?php if($message = getRedirectMessages("error")) : ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?= $message ?>
+                        </div>
+                    <?php endif ?>
                 </div>
-                <form action="/login" method="POST">
+                <form action="/register" method="POST">
                     <input type="text" name="first_name" class="form-control mb-3" placeholder="Emri" required/>
                     <input type="text" name="last_name" class="form-control mb-3" placeholder="Mbiemri" required/>
                     <input type="email" name="email" class="form-control mb-3" placeholder="Email" required/>
@@ -23,7 +28,7 @@
                         <input type="checkbox" id="check" class="form-check-input"/>
                         <a href="#" target="_blank">Termat dhe kushtet e përdorimit</a>
                     </div>
-                    <button class="btn btn-block login-btn">Regjistrohu</button>
+                    <button type="submit" class="btn btn-block login-btn">Regjistrohu</button>
                 </form>
                 <hr/>
                 <div class="text-center">

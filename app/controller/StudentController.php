@@ -8,6 +8,7 @@ use App\Generation;
 use App\Role;
 use App\Semester;
 use App\Student;
+use App\User;
 
 class StudentController extends BaseController
 {
@@ -81,6 +82,12 @@ class StudentController extends BaseController
      */
     public function edit($id)
     {
+        $student = Student::with(['user','generation'])->where('student_id','=',$id)->first();
+        $semesters = Semester::all();
+        return view("students/edit", [
+            'student' => $student,
+            'semesters' => $semesters
+        ]);
     }
 
     /**
@@ -91,6 +98,22 @@ class StudentController extends BaseController
      */
     public function update($request, $id)
     {
+        $this->validate($request,["first_name","last_name","email","semester"]);
+        $semester = Semester::find($request["semester"]);
+
+        User::update($id,[
+            'first_name' => $request["first_name"],
+            'last_name' => $request["last_name"],
+            'email' => $request["email"],
+        ]);
+
+        Student::update($id,[
+            'semester_id' => $semester->semester_id
+        ]);
+
+        return redirect('/admin/students', [
+            "success" => "Ndryshimet u ruajtën me sukses."
+        ]);
     }
 
     /**

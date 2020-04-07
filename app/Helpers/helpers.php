@@ -22,21 +22,35 @@ function responseJson($message, $code = 200)
 }
 
 /**
- * @param string $url
+ * @param $url
+ * @param array|null $data
  */
-function redirect($url)
+function redirect($url,$data = null)
 {
+    if ($data) {
+        $_SESSION["redirect_messages"] = $data;
+    }
     header("Location: $url");
-    $error = "asd";
+}
+
+function getRedirectMessages($message)
+{
+    $data = null;
+    if(isset($_SESSION["redirect_messages"])){
+        $data = $_SESSION["redirect_messages"];
+        unset($_SESSION["redirect_messages"]);
+    }
+    return $data[$message];
 }
 
 /**
+ * @param array|null $data
  */
-function redirectBack()
+function redirectBack($data = null)
 {
     $headers = apache_request_headers();
     $lastUrl = $headers["Referer"];
-    redirect($lastUrl);
+    redirect($lastUrl,$data);
 }
 
 /**

@@ -13,9 +13,14 @@
                 <div class="text-center">
                     <img src="/storage/img/clock-logo.png" width="125"/>
                     <h4 class="h4 mb-4">Mirë se erdhët!</h4>
+                    <?php if($message = getRedirectMessages("error")) : ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= $message ?>
+                    </div>
+                    <?php endif ?>
                 </div>
                 <form action="/login" method="POST">
-                    <input type="email" name="email" class="form-control mb-3" placeholder="Email" required/>
+                    <input type="email" name="email" class="form-control mb-3" placeholder="Email"/>
                     <input type="password" name="password" class="form-control mb-3" placeholder="Fjalkalimi"
                            required/>
                     <div class="form-group form-check">
