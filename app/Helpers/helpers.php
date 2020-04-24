@@ -101,7 +101,8 @@ function filterVars($array, $toRemove = [])
             'timestamps',
             'with',
             'CREATED_AT',
-            'UPDATED_AT'
+            'UPDATED_AT',
+            'nestedWhere'
         ];
     return array_filter(
         $array,

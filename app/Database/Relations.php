@@ -88,7 +88,6 @@ trait Relations
     private function addRelationDataToResult($result)
     {
         foreach ($this->with as $relation) {
-
             $model = new $relation["model"];
             $foreginKey = $relation["foreignKey"];
             $localKey = $relation["localKey"];
@@ -99,9 +98,9 @@ trait Relations
 
             $nestedRelations = $relation["nestedRelations"];
             if ($nestedRelations != null) {
-                $models = $model::with([$nestedRelations])->whereIn($model->primaryKey, $modelIDs)->get();
+                $models = $model::with([$nestedRelations])->whereIn($foreginKey, $modelIDs)->get();
             } else {
-                $models = $model->whereIn($model->primaryKey, $modelIDs)->get();
+                $models = $model->whereIn($foreginKey, $modelIDs)->get();
             }
             foreach ($result as $res) {
                 $name = $model->table;

@@ -12,7 +12,8 @@
                     <th scope="col"></th>
                     <th scope="col">Emërtimi</th>
                     <th scope="col">Kodi</th>
-                    <th scope="col">Krijuar më</th>
+                    <th scope="col">ECTS</th>
+                    <th scope="col">Obligative/Zgjedhore</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
@@ -22,10 +23,19 @@
                         <th class="text-center" scope="row"><?= $key + 1 ?></th>
                         <td><?= $subject->title ?></td>
                         <td><?= $subject->code ?></td>
-                        <td><?= $subject->created_at ?></td>
+                        <td><?= $subject->ects_credits ?></td>
+                        <td><?= $subject->subject_type->description ?></td>
                         <td>
-                            <a style="color: #5e676f" href="/admin/subjects/<?= $subject->subject_id ?>/edit"><i class="fas fa-pen px-2"></i></a>
-                            <a style="color: #5e676f" href="/admin/subjects/<?= $subject->subject_id ?>/delete"><i class="fas fa-trash px-2"></i></a>
+                            <a class="btn btn-link btn-sm" style="color: #5e676f" href="/admin/subjects/<?= $subject->subject_id ?>/edit">
+                                <i class="fas fa-pen px-1"></i>
+                            </a>
+                            <button class="btn btn-link btn-sm" style="color: #5e676f" onclick="alertAndRedirect(
+                                'Pas fshirjes së lëndës <?= "\\'$subject->title\\'" ?>, ju nuk do të jeni në gjendje ta riktheni atë!',
+                                'Fshi lëndën!',
+                                '/admin/subjects/<?= $subject->subject_id ?>/delete'
+                            )">
+                                <i class="fas fa-trash px-1"></i>
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>

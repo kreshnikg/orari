@@ -30,7 +30,7 @@ class Model
      * Table timestamps
      * @var boolean
      */
-    public $timestamps = true;
+    protected $timestamps = true;
 
     /**
      * The relations to load on every query
@@ -51,7 +51,7 @@ class Model
      * Get timestamps value
      * @return boolean
      */
-    private function timestamps()
+    public function timestamps()
     {
         return $this->timestamps;
     }

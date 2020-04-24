@@ -4,6 +4,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
+use App\Semester;
 
 class ScheduleController extends BaseController
 {
@@ -13,7 +14,10 @@ class ScheduleController extends BaseController
      */
     public function index()
     {
-        return view('schedules/index');
+        $semesters = Semester::all();
+        return view('schedules/admin/index',[
+            "semesters" => $semesters
+        ]);
     }
 
     /**

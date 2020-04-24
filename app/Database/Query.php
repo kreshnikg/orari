@@ -7,16 +7,22 @@ use http\Exception\InvalidArgumentException;
 trait Query {
 
     /**
-     * Query statement
+     * Query statement.
      * @var string
      */
     protected $query;
 
     /**
-     * Values to put in query parameters
+     * Values to put in query parameters.
      * @var array
      */
     protected $values = [];
+
+    /**
+     * If query already has a where command.
+     * @var bool
+     */
+    protected $nestedWhere = false;
 
     /**
      * @param mixed ...$values
@@ -86,8 +92,12 @@ trait Query {
         if (empty($this->query)) {
             $this->query = "SELECT * FROM $this->table WHERE $column $operator ?";
         } else {
-            $this->query .= " WHERE $column $operator ?";
+            if($this->nestedWhere)
+                $this->query .= " AND $column $operator ?";
+            else
+                $this->query .= " WHERE $column $operator ?";
         }
+        $this->nestedWhere = true;
         $this->addValue($value);
         return $this;
     }

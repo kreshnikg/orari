@@ -2,6 +2,7 @@
 
 use App\Router\Router;
 
+
 Router::get('/login', 'Auth\LoginController@form');
 Router::post('/login', 'Auth\LoginController@login');
 Router::get('/register', 'Auth\RegisterController@form');
@@ -26,6 +27,11 @@ Router::middleware(['auth'])->group(function () {
     #endregion
 
     Router::middleware(['admin'])->prefix("/admin")->group(function () {
+
+        #region Schedules
+        Router::get('/schedules', 'Admin\ScheduleController@index');
+        #endregion
+
         #region Subjects
         Router::get('/subjects', 'Admin\SubjectController@index');
         Router::post('/subjects', 'Admin\SubjectController@store');
@@ -76,6 +82,15 @@ Router::middleware(['auth'])->group(function () {
         #region Students
         Router::get('/students', 'StudentController@index');
         Router::get('/students/{id}', 'StudentController@show');
+        #endregion
+    });
+
+    Router::middleware(['student'])->prefix("/student")->group(function () {
+        #region Subjects
+        Router::get('/subjects', 'Student\SubjectController@index');
+        Router::get('/subjects/submit', 'Student\SubjectController@submit');
+        Router::get('/subjects/{id}/register', 'Student\SubjectController@register');
+        Router::get('/subjects/{id}/cancel', 'Student\SubjectController@cancel');
         #endregion
     });
 });

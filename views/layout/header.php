@@ -42,7 +42,7 @@
             <img src="/storage/img/clock-logo-white.png" width="100"/>
         </li>
         <?php if(userHasRole(["teacher","student"])) includeComponent('/components/sidebar-item', [
-            "href" => "/" . user()->role . "/orari",
+            "href" => "/" . user()->role . "/schedule",
             "title" => "Orari",
             "icon" => "far fa-calendar-alt"
         ], "sidebarItem"); ?>

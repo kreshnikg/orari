@@ -15,3 +15,25 @@ function calendarToAl(time){
     return time;
 }
 
+function alertAndRedirect(text, confirmText, redirectTo){
+    Swal.fire({
+        title: 'A jeni të sigurtë?',
+        text: text,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: confirmText,
+        cancelButtonText: 'Anulo'
+    }).then((result) => {
+        if (result.value) {
+            Swal.fire({
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            window.location.href = redirectTo;
+        }
+    })
+}
+

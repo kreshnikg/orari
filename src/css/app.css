@@ -254,3 +254,36 @@ body {
 .my-table thead th {
     border-top: 0 !important;
 }
+
+.btn-green {
+    background-color: #1cad8130;
+    color: #1cad81;
+    font-weight: 600 !important;
+}
+
+.btn-green:hover {
+    background-color: #1cad8140;
+    color: #1cad81;
+}
+
+.btn-blue {
+    background-color: #088cdd30;
+    color: #088cdd;
+    font-weight: 600 !important;
+}
+
+.btn-blue:hover {
+    background-color: #088cdd40;
+    color: #088cdd;
+}
+
+.btn-red {
+    background-color: #e3342f30;
+    color: #e3342f;
+    font-weight: 600 !important;
+}
+
+.btn-red:hover {
+    background-color: #e3342f40;
+    color: #e3342f;
+}

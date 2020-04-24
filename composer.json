@@ -9,7 +9,11 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "App\\Controller\\Admin\\": "app/Controller/admin",
+            "App\\Controller\\Auth\\": "app/Controller/auth",
+            "App\\Controller\\Student\\": "app/Controller/student",
+            "App\\Controller\\Teacher\\": "app/Controller/teacher"
         },
         "classmap": [
             "app"

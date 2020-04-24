@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
 use App\Subject;
+use App\SubjectType;
 
 class SubjectController extends BaseController
 {
@@ -15,9 +16,9 @@ class SubjectController extends BaseController
     public function index()
     {
         if(isset($_GET["search"]))
-            $subjects = Subject::where('title', 'LIKE', '%' . $_GET["search"] . '%')->get();
+            $subjects = Subject::with(['type'])->where('title', 'LIKE', '%' . $_GET["search"] . '%')->get();
         else
-            $subjects = Subject::all();
+            $subjects = Subject::with(['type'])->select('*')->get();
         return view('subjects/index',[
             'subjects' => $subjects
         ]);
@@ -28,7 +29,10 @@ class SubjectController extends BaseController
      */
     public function create()
     {
-        return view('subjects/create');
+        $subjectTypes = SubjectType::all();
+        return view('subjects/create',[
+            "subjectTypes" => $subjectTypes
+        ]);
     }
 
     /**
@@ -38,14 +42,19 @@ class SubjectController extends BaseController
      */
     public function store($request)
     {
-        $this->validate($request,["title","code"]);
+        $this->validate($request,["title","code","subject_type","ects_credits"]);
+        $subjectType = SubjectType::find($request["subject_type"]);
 
         $subject = new Subject;
         $subject->title = $request["title"];
         $subject->code = $request["code"];
+        $subject->ects_credits = $request["ects_credits"];
+        $subject->subject_type_id = $subjectType->subject_type_id;
         $subject->save();
 
-        return redirect("/subjects");
+        return redirect("/admin/subjects",[
+            "success" => "Lënda u krijua me sukses!"
+        ]);
     }
 
     /**
@@ -64,9 +73,11 @@ class SubjectController extends BaseController
      */
     public function edit($id)
     {
-        $subject = Subject::find($id);
+        $subject = Subject::with(['type'])->find($id);
+        $subjectTypes = SubjectType::all();
         return view("subjects/edit",[
-            "subject" => $subject
+            "subject" => $subject,
+            "subjectTypes" => $subjectTypes
         ]);
     }
 
@@ -78,14 +89,19 @@ class SubjectController extends BaseController
      */
     public function update($request, $id)
     {
-        $this->validate($request,["title","code"]);
+        $this->validate($request,["title","code","subject_type","ects_credits"]);
+        $subjectType = SubjectType::find($request["subject_type"]);
 
         Subject::update($id,[
             "title" => $request["title"],
-            "code" => $request["code"]
+            "code" => $request["code"],
+            "ects_credits" => $request["ects_credits"],
+            "subject_type_id" => $subjectType->subject_type_id
         ]);
 
-        return redirect("/subjects");
+        return redirect("/admin/subjects",[
+            "success" => "Ndryshimet u ruajtën me sukses!"
+        ]);
     }
 
     /**
@@ -96,6 +112,8 @@ class SubjectController extends BaseController
     public function destroy($id)
     {
         Subject::delete($id);
-        return redirect("/subjects");
+        return redirect("/admin/subjects",[
+            "success" => "Lënda u fshi me sukses!"
+        ]);
     }
 }
