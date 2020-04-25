@@ -71,6 +71,16 @@ Router::middleware(['auth'])->group(function () {
         Router::post('/admins/{id}', 'Admin\AdminController@update');
         Router::get('/admins/{id}', 'Admin\AdminController@show');
         #endregion
+
+        #region Classrooms
+        Router::get('/classrooms', 'Admin\ClassroomController@index');
+        Router::post('/classrooms', 'Admin\ClassroomController@store');
+        Router::get('/classrooms/create', 'Admin\ClassroomController@create');
+        Router::get('/classrooms/{id}/edit', 'Admin\ClassroomController@edit');
+        Router::get('/classrooms/{id}/delete', 'Admin\ClassroomController@destroy');
+        Router::post('/classrooms/{id}', 'Admin\ClassroomController@update');
+        Router::get('/classrooms/{id}', 'Admin\ClassroomController@show');
+        #endregion
     });
 
     Router::middleware(['teacher'])->prefix("/teacher")->group(function () {

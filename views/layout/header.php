@@ -68,8 +68,14 @@
         ], "sidebarItem"); ?>
         <?php if(userHasRole("admin")) includeComponent('/components/sidebar-item', [
             "href" => "/admin/admins",
-                "title" => "Administratorët",
+            "title" => "Administratorët",
             "icon" => "fas fa-user-cog"
+        ], "sidebarItem"); ?>
+
+        <?php if(userHasRole("admin")) includeComponent('/components/sidebar-item', [
+            "href" => "/admin/classrooms",
+            "title" => "Klasat",
+            "icon" => "fas fa-chalkboard"
         ], "sidebarItem"); ?>
         <li class="sidebar-item position-absolute w-100 text-center" style="bottom: 20px">
             <a class="sidebar-link" href="/logout">
