@@ -98,7 +98,10 @@ class Router
         $parsedUrl = parse_url($_SERVER["REQUEST_URI"]);
         $path = $parsedUrl["path"];
         $requestMethod = $_SERVER["REQUEST_METHOD"];
-        foreach (self::$routes as $route) {
+
+        $routes = self::loadRoutesFromCache();
+
+        foreach ($routes as $route) {
             if (self::matchRoute($route, $path, $requestMethod)) {
 
                 self::checkMiddleware($route);
@@ -108,7 +111,7 @@ class Router
                 return self::excecuteRouteCallback($route, $uriParameters);
             }
         }
-        return view("error/404",null,false);
+        return view("error/404", null, false);
     }
 
     /**
@@ -206,13 +209,13 @@ class Router
     public static function middleware($middlewares)
     {
         $check = false;
-        foreach($middlewares as $middleware){
-            foreach(self::$middleware as $middlew){
-                if(in_array($middleware,$middlew))
+        foreach ($middlewares as $middleware) {
+            foreach (self::$middleware as $middlew) {
+                if (in_array($middleware, $middlew))
                     $check = true;
             }
         }
-        if(!$check)
+        if (!$check)
             array_push(self::$middleware, $middlewares);
         return new static;
     }
@@ -262,5 +265,37 @@ class Router
     public static function post($uri, $callback)
     {
         self::registerRoute($uri, $callback, "POST", self::$middleware);
+    }
+
+    private static function getRouteCacheDirectory()
+    {
+        return $_SERVER['DOCUMENT_ROOT'] . "/storage/cache/routes.txt";
+    }
+
+    private static function getCacheFile()
+    {
+        return @file_get_contents(self::getRouteCacheDirectory());
+    }
+
+    public static function isCached()
+    {
+        $cacheFile = self::getCacheFile();
+        return $cacheFile ? true : false;
+    }
+
+    private static function writeRoutesOnCacheFile()
+    {
+        $routeCache = fopen(self::getRouteCacheDirectory(), "w");
+        fwrite($routeCache, json_encode(self::$routes));
+    }
+
+    private static function loadRoutesFromCache()
+    {
+        if(self::isCached())
+            return json_decode(self::getCacheFile(),true);
+        else {
+            self::writeRoutesOnCacheFile();
+            return self::$routes;
+        }
     }
 }
