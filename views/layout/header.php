@@ -3,19 +3,8 @@
 <head>
     <title>Orari</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="/src/css/fontawesome/css/all.css">
-    <link rel="stylesheet" type="text/css" href="/src/css/app.css"/>
-    <link rel="stylesheet" type="text/css" href="/src/css/bootstrap.css"/>
-    <script src="/src/js/react.js"></script>
-    <script src="/src/js/react-dom.js"></script>
-    <script src="/src/js/babel.js"></script>
-    <script src="/src/js/jquery.min.js"></script>
-    <script src="/src/js/moment.min.js"></script>
-    <script src="/src/js/daterangepicker.min.js"></script>
-    <script src="/src/js/sweetalert.js"></script>
-    <script src="/src/js/bootstrap.min.js"></script>
-    <script src="/src/js/app.js"></script>
-    <link rel="stylesheet" type="text/css" href="/src/css/daterangepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="/public/css/app.css"/>
+    <script src="/public/js/app.js"></script>
 </head>
 <body>
 <script type="text/babel">
@@ -39,7 +28,7 @@
 <div id="sidebar" class="sidebar border-0">
     <ul class="p-0">
         <li class="d-flex justify-content-center my-3">
-            <img src="/storage/img/clock-logo-white.png" width="100"/>
+            <img alt="logo" src="/storage/img/clock-logo-white.png" width="100"/>
         </li>
         <?php if(userHasRole(["teacher","student"])) includeComponent('/components/sidebar-item', [
             "href" => "/" . user()->role . "/schedule",
@@ -90,7 +79,7 @@
     <div class="searchbar">
         <form method="GET" action="">
             <input type="text" name="search" placeholder="Kërko" class="searchbar-input"/>
-            <button class="searchbar-button" type="submit"><span class="fa fa-search"></span></button>
+            <button class="searchbar-button px-3" type="submit"><i class="fa fa-search"></i></button>
         </form>
     </div>
 

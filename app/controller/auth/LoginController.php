@@ -14,7 +14,7 @@ class LoginController extends BaseController
     public function form(){
         if(isAuthenticated())
             redirect('/');
-        return view('auth/login',null,false);
+        return view('layout/app',"",false);
     }
 
     /**
@@ -40,11 +40,9 @@ class LoginController extends BaseController
             }
         }
         if($success){
-            redirect('/');
+            return responseJson("success");
         } else {
-            redirectBack([
-                "error" => "Email ose fjalkalimi është gabim."
-            ]);
+            return responseJson("Email ose fjalkalimi është gabim.", 422);
         }
     }
 

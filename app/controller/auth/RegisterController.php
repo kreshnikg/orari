@@ -18,7 +18,7 @@ class RegisterController extends BaseController
     {
         if(isAuthenticated())
             redirect('/');
-        return view('auth/register',null,false);
+        return view('layout/app',"",false);
     }
 
     /**

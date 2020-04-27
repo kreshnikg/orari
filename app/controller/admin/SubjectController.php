@@ -19,7 +19,8 @@ class SubjectController extends BaseController
             $subjects = Subject::with(['type'])->where('title', 'LIKE', '%' . $_GET["search"] . '%')->get();
         else
             $subjects = Subject::with(['type'])->select('*')->get();
-        return view('subjects/index',[
+
+        return responseJson([
             'subjects' => $subjects
         ]);
     }
@@ -107,12 +108,13 @@ class SubjectController extends BaseController
     /**
      * Delete the specified resource in database.
      *
+     * @param $request
      * @param integer $id
      */
-    public function destroy($id)
+    public function destroy($request, $id)
     {
         Subject::delete($id);
-        return redirect("/admin/subjects",[
+        return responseJson([
             "success" => "Lënda u fshi me sukses!"
         ]);
     }

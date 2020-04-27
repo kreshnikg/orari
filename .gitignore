@@ -3,3 +3,7 @@
 /.idea
 /storage/img
 /vendor/
+/public/css/app.css
+/public/js/app.js
+/public/fonts
+/fonts

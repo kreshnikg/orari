@@ -11,7 +11,7 @@ function response($message, $code = 200)
 }
 
 /**
- * @param string $message
+ * @param string|array $message
  * @param int $code
  */
 function responseJson($message, $code = 200)
@@ -128,25 +128,12 @@ function view($view, $data = null, $withLayout = true)
         extract($data);
     }
     if ($withLayout)
-        include "./views/layout/header.php";
+        include "../views/layout/header.php";
 
-    require_once "./views/$view.php";
+    require_once "../views/$view.php";
 
     if ($withLayout)
-        include "./views/layout/footer.php";
-}
-
-/**
- * @param string $component
- * @param array $data
- * @param string $prefix
- */
-function includeComponent($component, $data = null, $prefix = "")
-{
-    if ($data) {
-        extract($data, EXTR_PREFIX_ALL, $prefix);
-    }
-    include "./views/$component.php";
+        include "../views/layout/footer.php";
 }
 
 /**
@@ -210,4 +197,8 @@ function userHasRole($roles)
         if($roles == $userRole)
             $hasRole = true;
     return $hasRole;
+}
+
+function isXhr(){
+    return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 }

@@ -13,9 +13,9 @@ class Router
 
     /**
      * Routes prefix.
-     * @var string
+     * @var array
      */
-    private static $prefix = null;
+    private static $prefix = [];
 
     /**
      * Routes middleware.
@@ -99,8 +99,8 @@ class Router
         $path = $parsedUrl["path"];
         $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-        $routes = self::loadRoutesFromCache();
-
+//        $routes = self::loadRoutesFromCache();
+        $routes = self::$routes;
         foreach ($routes as $route) {
             if (self::matchRoute($route, $path, $requestMethod)) {
 
@@ -124,6 +124,10 @@ class Router
         array_push(self::$routes, $route);
     }
 
+    private static function concatPrefixes(){
+
+    }
+
     /**
      * Register route to $this->routes.
      *
@@ -136,8 +140,8 @@ class Router
     private static function registerRoute($uri, $callback, $requestMethod, $middleware)
     {
         $uriPrefix = $uri;
-        if (self::$prefix)
-            $uriPrefix = self::$prefix . $uri;
+        if (count(self::$prefix) > 0)
+            $uriPrefix = implode("",self::$prefix) . $uri;
         $route = [
             'uri' => $uriPrefix,
             'requestMethod' => $requestMethod,
@@ -187,7 +191,7 @@ class Router
      */
     public function prefix($prefix)
     {
-        self::$prefix = $prefix;
+        array_push(self::$prefix, $prefix);
         return $this;
     }
 
@@ -198,7 +202,7 @@ class Router
     public function group($callback)
     {
         $callback();
-        self::$prefix = null;
+        array_pop(self::$prefix);
         array_pop(self::$middleware);
     }
 
