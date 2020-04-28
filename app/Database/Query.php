@@ -183,6 +183,10 @@ trait Query {
                 $query->bind_param($types, ...$values);
             }
             $query->execute();
+            if($query->error){
+                http_response_code(500);
+                throw new \mysqli_sql_exception($query->error);
+            }
         } else {
             $error = $cnn->error;
             $this->connection->close();

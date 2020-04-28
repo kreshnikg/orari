@@ -34,8 +34,8 @@ class LoginController extends BaseController
                     "user_id" => $user->user_id,
                     "role" => $user->role->title
                 ];
-                setcookie("auth", "1",time()+3600,"/");
-                setcookie("user", json_encode($userData),time()+3600,"/");
+                setcookie("auth", "1",time()+86000,"/");
+                setcookie("user", json_encode($userData),time()+86000,"/");
                 $success = true;
             }
         }

@@ -124,10 +124,6 @@ class Router
         array_push(self::$routes, $route);
     }
 
-    private static function concatPrefixes(){
-
-    }
-
     /**
      * Register route to $this->routes.
      *

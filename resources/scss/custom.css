@@ -252,34 +252,34 @@ body {
 }
 
 .btn-green {
-    background-color: #1cad8130;
-    color: #1cad81;
+    background-color: #1cad8130 !important;
+    color: #1cad81 !important;
     font-weight: 600 !important;
 }
 
 .btn-green:hover {
-    background-color: #1cad8140;
-    color: #1cad81;
+    background-color: #1cad8140 !important;
+    color: #1cad81 !important;
 }
 
 .btn-blue {
-    background-color: #088cdd30;
-    color: #088cdd;
+    background-color: #088cdd30 !important;
+    color: #088cdd !important;
     font-weight: 600 !important;
 }
 
 .btn-blue:hover {
-    background-color: #088cdd40;
-    color: #088cdd;
+    background-color: #088cdd40 !important;
+    color: #088cdd !important;
 }
 
 .btn-red {
-    background-color: #e3342f30;
-    color: #e3342f;
+    background-color: #e3342f30 !important;
+    color: #e3342f !important;
     font-weight: 600 !important;
 }
 
 .btn-red:hover {
-    background-color: #e3342f40;
-    color: #e3342f;
+    background-color: #e3342f40 !important;
+    color: #e3342f !important;
 }

@@ -6,10 +6,10 @@ import Spinner from "../includes/Spinner";
 
 export default function Index(props) {
 
-    const API_BASE_URL = "/api/admin/subjects";
+    const API_BASE_URL = "/api/admin/teachers";
 
     const [state, setState] = useState({
-        subjects: [],
+        teachers: [],
         loader: true
     })
 
@@ -20,24 +20,24 @@ export default function Index(props) {
     const getData = () => {
         axios.get(API_BASE_URL).then((response) => {
             setState({
-                subjects: response.data.subjects,
+                teachers: response.data.teachers,
                 loader: false
             })
         })
     }
 
-    const deleteHandler = (subjectId) => {
-        axios.post(`${API_BASE_URL}/${subjectId}/delete`)
+    const deleteHandler = (teacherId) => {
+        axios.post(`${API_BASE_URL}/${teacherId}/delete`)
             .then((response) => {
                 swal({
                     icon: 'success',
                     timer: 1500,
                 });
-                getData()
+                getData();
             })
     };
 
-    const deleteAlert = (subjectId) => {
+    const deleteAlert = (teacherId) => {
         swal({
             title: "A jeni të sigurtë ?",
             text: "Pas fshierjes, nuk do të jeni në gjendje ta riktheni!",
@@ -54,7 +54,7 @@ export default function Index(props) {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                deleteHandler(subjectId);
+                deleteHandler(teacherId);
             }
         });
     };
@@ -62,9 +62,9 @@ export default function Index(props) {
     return (
         <>
             <div className="d-flex align-items-center mb-4">
-                <h4 className="mb-0">Lëndët</h4>
-                <Link to="/admin/subjects/create" className="btn btn-primary ml-auto my-btn-primary-color my-shadow">Shto
-                    lëndë</Link>
+                <h4 className="mb-0">Ligjëruesit</h4>
+                <Link to="/admin/teachers/create" className="btn btn-primary ml-auto my-btn-primary-color my-shadow">Shto
+                    ligjërues</Link>
             </div>
 
             <div className="row">
@@ -74,35 +74,29 @@ export default function Index(props) {
                             <thead>
                             <tr>
                                 <th scope="col"/>
-                                <th scope="col">Emërtimi</th>
-                                <th scope="col">Kodi</th>
-                                <th scope="col">ECTS kreditë</th>
-                                <th scope="col">Lloji</th>
+                                <th scope="col">Emri</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Roli</th>
                                 <th scope="col"/>
                             </tr>
                             </thead>
                             <tbody>
-                            {state.subjects.map((subject,index) => {
+                            {state.teachers.map((teacher,index) => {
                                 return (
-                                    <tr key={subject.subject_id}>
+                                    <tr key={teacher.teacher_id}>
                                         <th className="text-center" scope="row">{index + 1}</th>
-                                        <td>{subject.title}</td>
-                                        <td>{subject.code}</td>
-                                        <td>{subject.ects_credits}</td>
-                                        <td>
-                                            <span className={`badge p-1 badge-${subject.subject_type_id == 1 ? 'secondary' : 'info'}`}>
-                                                {subject.subject_type.description}
-                                            </span>
-                                        </td>
+                                        <td>{teacher.user.first_name} {teacher.user.last_name}</td>
+                                        <td>{teacher.user.email}</td>
+                                        <td>{teacher.teacher_type.description}</td>
                                         <td>
                                             <Link className="btn btn-link btn-sm" style={{color: "#5e676f"}}
-                                               to={`/admin/subjects/${subject.subject_id}/edit`}>
+                                                  to={`/admin/teachers/${teacher.teacher_id}/edit`}>
                                                 <i className="fas fa-pen px-1"/>
                                             </Link>
                                             <button
                                                 className="btn btn-link btn-sm"
                                                 style={{color: "#5e676f"}}
-                                                onClick={() => deleteAlert(subject.subject_id)}>
+                                                onClick={() => deleteAlert(teacher.teacher_id)}>
                                                 <i className="fas fa-trash px-1"/>
                                             </button>
                                         </td>
@@ -112,13 +106,13 @@ export default function Index(props) {
                             </tbody>
                         </table>
                         {state.loader &&
-                            <div className="container">
-                                <div className="row">
-                                    <div className="col-12 text-center my-5">
-                                        <Spinner loading={state.loader}/>
-                                    </div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-12 text-center my-5">
+                                    <Spinner loading={state.loader}/>
                                 </div>
-                            </div>}
+                            </div>
+                        </div>}
                     </div>
                 </div>
             </div>

@@ -18,7 +18,7 @@ class SubjectController extends BaseController
     {
         $student = Student::with(['studentSubject'])->where('student_id','=',user()->user_id)->first();
         $subjects = Subject::with(['type'])->where('semester_id','=',$student->semester_id)->get();
-        return view('subjects/student/index',[
+        return responseJson([
             'subjects' => $subjects,
             'student' => $student
         ]);
@@ -34,9 +34,10 @@ class SubjectController extends BaseController
     }
 
     /**
+     * @param $request
      * @param integer $id
      */
-    public function register($id)
+    public function register($request, $id)
     {
         $subject = Subject::find($id);
         $student = Student::find(user()->user_id);
@@ -50,9 +51,10 @@ class SubjectController extends BaseController
     }
 
     /**
+     * @param $request
      * @param integer $id
      */
-    public function cancel($id)
+    public function cancel($request, $id)
     {
         $subject = Subject::find($id);
         $student = Student::find(user()->user_id);

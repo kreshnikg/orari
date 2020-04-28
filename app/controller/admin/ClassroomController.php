@@ -17,7 +17,7 @@ class ClassroomController extends BaseController
     public function index()
     {
         $classrooms = Classroom::with(['type'])->select('*')->get();
-        return view('classrooms/index',[
+        return responseJson([
             "classrooms" => $classrooms
         ]);
     }
@@ -28,7 +28,7 @@ class ClassroomController extends BaseController
     public function create()
     {
         $classroomTypes = ClassroomType::all();
-        return view('classrooms/create', [
+        return responseJson([
             "classroomTypes" => $classroomTypes,
         ]);
     }
@@ -49,7 +49,7 @@ class ClassroomController extends BaseController
         $classroom->classroom_type_id = $classroomType->classroom_type_id;
         $classroom->save();
 
-        return redirect("/admin/classrooms",[
+        return responseJson([
             "success" => "Klasa u krijua me sukses!"
         ]);
     }
@@ -72,7 +72,7 @@ class ClassroomController extends BaseController
     {
         $classroom = Classroom::with(['type'])->find($id);
         $classroomTypes = ClassroomType::all();
-        return view("classrooms/edit",[
+        return responseJson([
             "classroom" => $classroom,
             "classroomTypes" => $classroomTypes
         ]);
@@ -93,8 +93,8 @@ class ClassroomController extends BaseController
             "number" => $request["number"],
             "classroom_type_id" => $classroomType->classroom_type_id
         ]);
-        
-        return redirect("/admin/classrooms",[
+
+        return responseJson([
             "success" => "Ndryshimet u ruajtën me sukses!"
         ]);
     }
@@ -102,12 +102,13 @@ class ClassroomController extends BaseController
     /**
      * Delete the specified resource in database.
      *
+     * @param $request
      * @param integer $id
      */
-    public function destroy($id)
+    public function destroy($request, $id)
     {
         Classroom::delete($id);
-        return redirect("/admin/classrooms",[
+        return responseJson([
             "success" => "Klasa u fshi me sukses!"
         ]);
     }

@@ -6,10 +6,6 @@ use App\Router\Router;
 /**
  * Boot application routes
  */
-//if(Router::isCached())
-//    Router::checkRoute();
-//else
-
 if (isXhr())
     require __DIR__.'/../routes/api.php';
 else

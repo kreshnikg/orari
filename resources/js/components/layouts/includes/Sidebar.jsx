@@ -1,12 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import Cookies from "js-cookie";
+import React from 'react';
 import SidebarItem from "./SidebarItem";
 
 export default function Sidebar(props) {
-
-    useEffect(() => {
-    }, []);
-
     return (
         <div id="sidebar" className="sidebar border-0">
             <ul className="p-0">
@@ -36,6 +31,5 @@ export default function Sidebar(props) {
                 </li>
             </ul>
         </div>
-
     )
 }

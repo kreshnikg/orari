@@ -19,7 +19,7 @@ class StudentController extends BaseController
     public function index()
     {
         $students = Student::with(['user','generation','semester.studyYear'])->select('*')->get();
-        return view('students/index',[
+        return responseJson([
             'students' => $students
         ]);
     }
@@ -31,7 +31,7 @@ class StudentController extends BaseController
     {
         $generation = Generation::where('year','=',date('Y'))->first();
         $semester = Semester::where('number','=',1)->first();
-        return view("students/create", [
+        return responseJson([
             'generation' => $generation,
             'semester' => $semester
         ]);
@@ -84,7 +84,7 @@ class StudentController extends BaseController
     {
         $student = Student::with(['user','generation'])->where('student_id','=',$id)->first();
         $semesters = Semester::all();
-        return view("students/edit", [
+        return responseJson([
             'student' => $student,
             'semesters' => $semesters
         ]);
@@ -111,7 +111,7 @@ class StudentController extends BaseController
             'semester_id' => $semester->semester_id
         ]);
 
-        return redirect('/admin/students', [
+        return responseJson([
             "success" => "Ndryshimet u ruajtën me sukses."
         ]);
     }
@@ -119,11 +119,12 @@ class StudentController extends BaseController
     /**
      * Delete the specified resource in database.
      *
+     * @param $request
      * @param integer $id
      */
-    public function destroy($id)
+    public function destroy($request, $id)
     {
         Student::delete($id);
-        return redirect("/admin/students");
+        return responseJson("success");
     }
 }

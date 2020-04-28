@@ -18,7 +18,7 @@ class SubjectController extends BaseController
         if(isset($_GET["search"]))
             $subjects = Subject::with(['type'])->where('title', 'LIKE', '%' . $_GET["search"] . '%')->get();
         else
-            $subjects = Subject::with(['type'])->select('*')->get();
+            $subjects = Subject::with(['type'])->select('*')->orderBy('subject_id','DESC')->get();
 
         return responseJson([
             'subjects' => $subjects
@@ -31,7 +31,7 @@ class SubjectController extends BaseController
     public function create()
     {
         $subjectTypes = SubjectType::all();
-        return view('subjects/create',[
+        return responseJson([
             "subjectTypes" => $subjectTypes
         ]);
     }
@@ -53,9 +53,7 @@ class SubjectController extends BaseController
         $subject->subject_type_id = $subjectType->subject_type_id;
         $subject->save();
 
-        return redirect("/admin/subjects",[
-            "success" => "Lënda u krijua me sukses!"
-        ]);
+        return responseJson("success");
     }
 
     /**
@@ -74,9 +72,9 @@ class SubjectController extends BaseController
      */
     public function edit($id)
     {
-        $subject = Subject::with(['type'])->find($id);
+        $subject = Subject::find($id);
         $subjectTypes = SubjectType::all();
-        return view("subjects/edit",[
+        return responseJson([
             "subject" => $subject,
             "subjectTypes" => $subjectTypes
         ]);
@@ -100,9 +98,7 @@ class SubjectController extends BaseController
             "subject_type_id" => $subjectType->subject_type_id
         ]);
 
-        return redirect("/admin/subjects",[
-            "success" => "Ndryshimet u ruajtën me sukses!"
-        ]);
+        return responseJson("success");
     }
 
     /**
@@ -114,8 +110,6 @@ class SubjectController extends BaseController
     public function destroy($request, $id)
     {
         Subject::delete($id);
-        return responseJson([
-            "success" => "Lënda u fshi me sukses!"
-        ]);
+        return responseJson("success");
     }
 }

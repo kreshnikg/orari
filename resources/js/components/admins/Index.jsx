@@ -6,10 +6,10 @@ import Spinner from "../includes/Spinner";
 
 export default function Index(props) {
 
-    const API_BASE_URL = "/api/admin/subjects";
+    const API_BASE_URL = "/api/admin/admins";
 
     const [state, setState] = useState({
-        subjects: [],
+        users: [],
         loader: true
     })
 
@@ -20,24 +20,24 @@ export default function Index(props) {
     const getData = () => {
         axios.get(API_BASE_URL).then((response) => {
             setState({
-                subjects: response.data.subjects,
+                users: response.data.users,
                 loader: false
             })
         })
     }
 
-    const deleteHandler = (subjectId) => {
-        axios.post(`${API_BASE_URL}/${subjectId}/delete`)
+    const deleteHandler = (adminId) => {
+        axios.post(`${API_BASE_URL}/${adminId}/delete`)
             .then((response) => {
                 swal({
                     icon: 'success',
                     timer: 1500,
                 });
-                getData()
+                getData();
             })
     };
 
-    const deleteAlert = (subjectId) => {
+    const deleteAlert = (adminId) => {
         swal({
             title: "A jeni të sigurtë ?",
             text: "Pas fshierjes, nuk do të jeni në gjendje ta riktheni!",
@@ -54,7 +54,7 @@ export default function Index(props) {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                deleteHandler(subjectId);
+                deleteHandler(adminId);
             }
         });
     };
@@ -62,9 +62,9 @@ export default function Index(props) {
     return (
         <>
             <div className="d-flex align-items-center mb-4">
-                <h4 className="mb-0">Lëndët</h4>
-                <Link to="/admin/subjects/create" className="btn btn-primary ml-auto my-btn-primary-color my-shadow">Shto
-                    lëndë</Link>
+                <h4 className="mb-0">Administratorët</h4>
+                <Link to="/admin/admins/create" className="btn btn-primary ml-auto my-btn-primary-color my-shadow">Shto
+                    administrator</Link>
             </div>
 
             <div className="row">
@@ -74,35 +74,29 @@ export default function Index(props) {
                             <thead>
                             <tr>
                                 <th scope="col"/>
-                                <th scope="col">Emërtimi</th>
-                                <th scope="col">Kodi</th>
-                                <th scope="col">ECTS kreditë</th>
-                                <th scope="col">Lloji</th>
+                                <th scope="col">Emri</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Krijuar më</th>
                                 <th scope="col"/>
                             </tr>
                             </thead>
                             <tbody>
-                            {state.subjects.map((subject,index) => {
+                            {state.users.map((user,index) => {
                                 return (
-                                    <tr key={subject.subject_id}>
+                                    <tr key={user.user_id}>
                                         <th className="text-center" scope="row">{index + 1}</th>
-                                        <td>{subject.title}</td>
-                                        <td>{subject.code}</td>
-                                        <td>{subject.ects_credits}</td>
-                                        <td>
-                                            <span className={`badge p-1 badge-${subject.subject_type_id == 1 ? 'secondary' : 'info'}`}>
-                                                {subject.subject_type.description}
-                                            </span>
-                                        </td>
+                                        <td>{user.first_name} {user.last_name}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.created_at}</td>
                                         <td>
                                             <Link className="btn btn-link btn-sm" style={{color: "#5e676f"}}
-                                               to={`/admin/subjects/${subject.subject_id}/edit`}>
+                                                  to={`/user/users/${user.user_id}/edit`}>
                                                 <i className="fas fa-pen px-1"/>
                                             </Link>
                                             <button
                                                 className="btn btn-link btn-sm"
                                                 style={{color: "#5e676f"}}
-                                                onClick={() => deleteAlert(subject.subject_id)}>
+                                                onClick={() => deleteAlert(user.user_id)}>
                                                 <i className="fas fa-trash px-1"/>
                                             </button>
                                         </td>
@@ -112,13 +106,13 @@ export default function Index(props) {
                             </tbody>
                         </table>
                         {state.loader &&
-                            <div className="container">
-                                <div className="row">
-                                    <div className="col-12 text-center my-5">
-                                        <Spinner loading={state.loader}/>
-                                    </div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-12 text-center my-5">
+                                    <Spinner loading={state.loader}/>
                                 </div>
-                            </div>}
+                            </div>
+                        </div>}
                     </div>
                 </div>
             </div>

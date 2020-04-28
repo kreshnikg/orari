@@ -19,7 +19,7 @@ class TeacherController extends BaseController
     public function index()
     {
         $teachers = Teacher::with(['user','type'])->select('*')->get();
-        return view('teachers/index',[
+        return responseJson([
             'teachers' => $teachers
         ]);
     }
@@ -30,7 +30,7 @@ class TeacherController extends BaseController
     public function create()
     {
         $teacherTypes = TeacherType::all();
-        return view('teachers/create', [
+        return responseJson([
             'teacherTypes' => $teacherTypes
         ]);
     }
@@ -59,7 +59,9 @@ class TeacherController extends BaseController
         $teacher->teacher_type_id = $teacherType->teacher_type_id;
         $teacher->save();
 
-        return redirect("/teachers");
+        return responseJson([
+            "success" => "Te dhënat u ruajtën me sukses."
+        ]);
     }
 
     /**
@@ -70,7 +72,7 @@ class TeacherController extends BaseController
     public function show($id)
     {
         $teacher = Teacher::with(["user","type"])->where('teacher_id','=',$id)->first();
-        return view("teachers/show",[
+        return responseJson([
             "teacher" => $teacher
         ]);
     }
@@ -84,7 +86,7 @@ class TeacherController extends BaseController
     {
         $teacher = Teacher::with(["user","type"])->where('teacher_id','=',$id)->first();
         $teacherTypes = TeacherType::all();
-        return view("teachers/edit",[
+        return responseJson([
             "teacher" => $teacher,
             "teacherTypes" => $teacherTypes
         ]);
@@ -111,7 +113,7 @@ class TeacherController extends BaseController
             'teacher_type_id' => $teacherType->teacher_type_id
         ]);
 
-        return redirect("/admin/teachers",[
+        return responseJson([
             "success" => "Ndryshimet u ruajtën me sukses."
         ]);
     }
@@ -119,11 +121,12 @@ class TeacherController extends BaseController
     /**
      * Delete the specified resource in database.
      *
+     * @param $request
      * @param integer $id
      */
-    public function destroy($id)
+    public function destroy($request, $id)
     {
         Teacher::delete($id);
-        return redirect("/teachers");
+        return responseJson("success");
     }
 }

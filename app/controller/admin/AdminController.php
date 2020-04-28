@@ -4,9 +4,11 @@
 namespace App\Controller\Admin;
 
 
+use App\Controller\BaseController;
+use App\Role;
 use App\User;
 
-class AdminController
+class AdminController extends BaseController
 {
 
     /**
@@ -15,7 +17,7 @@ class AdminController
     public function index()
     {
         $users = User::where('role_id','=',1)->get();
-        return view('admins/index', [
+        return responseJson([
             'users' => $users
         ]);
     }
@@ -25,7 +27,6 @@ class AdminController
      */
     public function create()
     {
-        return view('admins/create');
     }
 
     /**
@@ -35,6 +36,19 @@ class AdminController
      */
     public function store($request)
     {
+        $this->validate($request,["first_name","last_name","email","password"]);
+
+        $role = Role::where('title','=','admin')->first();
+
+        $user = new User;
+        $user->first_name = $request["first_name"];
+        $user->last_name = $request["last_name"];
+        $user->email = $request["email"];
+        $user->password = $request["password"];
+        $user->role_id = $role->role_id;
+        $user->save();
+
+        return responseJson("success");
     }
 
     /**
@@ -68,9 +82,15 @@ class AdminController
     /**
      * Delete the specified resource in database.
      *
+     * @param $request
      * @param integer $id
      */
-    public function destroy($id)
+    public function destroy($request, $id)
     {
+        if($id == 1){
+           return responseJson("Error",422);
+        }
+        User::delete($id);
+        return responseJson("success");
     }
 }
