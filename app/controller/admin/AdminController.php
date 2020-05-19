@@ -90,7 +90,7 @@ class AdminController extends BaseController
         if($id == 1){
            return responseJson("Error",422);
         }
-        User::delete($id);
+        User::destroy($id);
         return responseJson("success");
     }
 }

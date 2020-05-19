@@ -283,3 +283,13 @@ body {
     background-color: #e3342f40 !important;
     color: #e3342f !important;
 }
+
+.badge-blue {
+    background-color: #17a2b830;
+    color: #17a2b8;
+}
+
+.badge-gray {
+    background-color: #6c757d30;
+    color: #6c757d;
+}

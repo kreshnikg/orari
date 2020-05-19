@@ -202,3 +202,22 @@ function userHasRole($roles)
 function isXhr(){
     return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 }
+
+/**
+ * @param array $list
+ * @param integer $p
+ * @return array
+ */
+function partition( $list, $p ) {
+    $listlen = count( $list );
+    $partlen = floor( $listlen / $p );
+    $partrem = $listlen % $p;
+    $partition = array();
+    $mark = 0;
+    for ($px = 0; $px < $p; $px++) {
+        $incr = ($px < $partrem) ? $partlen + 1 : $partlen;
+        $partition[$px] = array_slice( $list, $mark, $incr );
+        $mark += $incr;
+    }
+    return $partition;
+}

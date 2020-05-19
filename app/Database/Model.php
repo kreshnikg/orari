@@ -135,16 +135,27 @@ class Model
     }
 
     /**
-     *  Delete model on database
+     *  Delete model on database based on primaryKey.
      *
      * @param int $id
-     * @return string
      */
-    public static function delete($id)
+    public static function destroy($id)
     {
         $INSTANCE = new static;
         $INSTANCE->deleteQuery()->where($INSTANCE->primaryKey, '=', $id)->excecuteQuery();
-        return "success";
+    }
+
+    /**
+     * Delete model on database on a condition.
+     *
+     * @param string $column
+     * @param string $operator
+     * @param mixed $value
+     */
+    public static function deleteWhere($column,$operator,$value)
+    {
+        $INSTANCE = new static;
+        $INSTANCE->deleteQuery()->where($column, $operator, $value)->excecuteQuery();
     }
 
     /**
@@ -232,6 +243,15 @@ class Model
         } else if ($function == 'select') {
             return $INSTANCE->selectQuery($arguments[0]);
         }
+    }
+
+    public static function raw($query){
+        $INSTANCE = new self;
+        $INSTANCE->query = $query;
+        if(strpos(strtolower($query),"select") !== false)
+            return $INSTANCE->get();
+        else
+            return $INSTANCE->excecuteQuery();
     }
 
     public function paginate($itemsPerPage){}

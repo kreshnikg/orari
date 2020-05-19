@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use App\Generation;
 use App\Role;
 use App\Semester;
 use App\Student;
@@ -18,7 +17,7 @@ class StudentController extends BaseController
      */
     public function index()
     {
-        $students = Student::with(['user','generation','semester.studyYear'])->select('*')->get();
+        $students = Student::with(['user','semester'])->select('*')->get();
         return responseJson([
             'students' => $students
         ]);
@@ -29,10 +28,8 @@ class StudentController extends BaseController
      */
     public function create()
     {
-        $generation = Generation::where('year','=',date('Y'))->first();
         $semester = Semester::where('number','=',1)->first();
         return responseJson([
-            'generation' => $generation,
             'semester' => $semester
         ]);
     }
@@ -46,7 +43,6 @@ class StudentController extends BaseController
     {
         $this->validate($request, ["first_name","last_name","email","password"]);
         $role = Role::where('title','=','student')->first();
-        $generation = Generation::where('year','=',date('Y'))->first();
         $semester = Semester::where('number','=',1)->first();
 
         $userId = UserController::createUser(
@@ -60,7 +56,6 @@ class StudentController extends BaseController
         $student = new Student;
         $student->student_id = $userId;
         $student->semester_id = $semester->semester_id;
-        $student->generation_id = $generation->generation_id;
         $student->save();
 
         return redirect("/admin/students");
@@ -124,7 +119,7 @@ class StudentController extends BaseController
      */
     public function destroy($request, $id)
     {
-        Student::delete($id);
+        Student::destroy($id);
         return responseJson("success");
     }
 }

@@ -45,7 +45,7 @@ trait Query {
         foreach ($data as $key => $value) {
             $this->addValue($value);
         }
-        $this->query = "UPDATE $this->table SET $keys";
+        $this->query = "UPDATE `$this->table` SET $keys";
         return $this;
     }
 
@@ -90,7 +90,7 @@ trait Query {
     {
         $this->checkComparisonOperator($operator);
         if (empty($this->query)) {
-            $this->query = "SELECT * FROM $this->table WHERE $column $operator ?";
+            $this->query = "SELECT * FROM `$this->table` WHERE $column $operator ?";
         } else {
             if($this->nestedWhere)
                 $this->query .= " AND $column $operator ?";
@@ -114,7 +114,7 @@ trait Query {
         $this->addValue(...$values);
         $parameters = $this->getParametersForQuery(count($values));
         if(empty($this->query))
-            $this->query = "SELECT * FROM $this->table WHERE $column IN ($parameters)";
+            $this->query = "SELECT * FROM `$this->table` WHERE $column IN ($parameters)";
         else
             $this->query .= " WHERE $column IN ($parameters)";
         return $this;
@@ -129,7 +129,7 @@ trait Query {
     private function selectQuery($columns)
     {
         $keys = $this->getKeysForSelectQuery($columns);
-        $this->query = "SELECT $keys FROM $this->table";
+        $this->query = "SELECT $keys FROM `$this->table`";
         return $this;
     }
 
@@ -164,7 +164,7 @@ trait Query {
      */
     private function deleteQuery()
     {
-        $this->query = "DELETE FROM $this->table";
+        $this->query = "DELETE FROM `$this->table`";
         return $this;
     }
 
@@ -191,7 +191,7 @@ trait Query {
             $error = $cnn->error;
             $this->connection->close();
             http_response_code(500);
-            throw new \mysqli_sql_exception($error);
+            throw new \mysqli_sql_exception($error  . ". [QUERY]($this->query)");
         }
         $results = $query->get_result();
         $this->connection->close();
@@ -217,7 +217,7 @@ trait Query {
         }
         $keysString = implode(",", $keys);
         $parameters = $this->getParametersForQuery(count($keys));
-        $this->query = "INSERT INTO $this->table ($keysString) VALUES ($parameters); ";
+        $this->query = "INSERT INTO `$this->table` ($keysString) VALUES ($parameters); ";
         return $this;
     }
 
@@ -244,11 +244,5 @@ trait Query {
 
         $this->query .= " LIMIT $number";
         return $this;
-    }
-
-    public static function raw($query,$parameters = []){
-        $INSTANCE = new self;
-        $INSTANCE->query = $query;
-        return $INSTANCE->get();
     }
 }

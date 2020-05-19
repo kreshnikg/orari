@@ -15,11 +15,6 @@ class Student extends Model
         $this->hasOne('App\User', 'user_id', 'student_id', $nestedRelations);
     }
 
-    public function generation($nestedRelations = null)
-    {
-        $this->hasOne('App\Generation', 'generation_id', 'generation_id', $nestedRelations);
-    }
-
     public function semester($nestedRelations = null)
     {
         $this->hasOne('App\Semester', 'semester_id', 'semester_id', $nestedRelations);

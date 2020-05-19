@@ -60,7 +60,7 @@ class SubjectController extends BaseController
         $student = Student::find(user()->user_id);
 
         $studentSubject = StudentSubject::where('student_id','=',$student->student_id)->where('subject_id','=',$subject->subject_id)->first();
-        StudentSubject::delete($studentSubject->student_subject_id);
+        StudentSubject::destroy($studentSubject->student_subject_id);
 
         return redirectBack();
     }

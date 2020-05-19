@@ -14,4 +14,14 @@ class Schedule extends Model
     {
         $this->hasOne('App\ScheduleType', 'schedule_type_id', 'schedule_type_id',$nestedRelations);
     }
+
+    public function subjectTeacher($nestedRelations = null)
+    {
+        $this->hasOne('App\SubjectTeacher', 'subject_teacher_id', 'subject_teacher_id',$nestedRelations);
+    }
+
+    public function academicYear($nestedRelations = null)
+    {
+        $this->hasOne('App\AcademicYear', 'academic_year_id', 'academic_year_id',$nestedRelations);
+    }
 }

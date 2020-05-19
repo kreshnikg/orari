@@ -107,7 +107,7 @@ class ClassroomController extends BaseController
      */
     public function destroy($request, $id)
     {
-        Classroom::delete($id);
+        Classroom::destroy($id);
         return responseJson([
             "success" => "Klasa u fshi me sukses!"
         ]);

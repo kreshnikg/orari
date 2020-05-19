@@ -49,6 +49,27 @@ CREATE TABLE `teacher`
     FOREIGN KEY (teacher_type_id) REFERENCES `teacher_type` (teacher_type_id)
 );
 
+CREATE TABLE `academic_year`
+(
+    academic_year_id int        NOT NULL AUTO_INCREMENT,
+    year             int UNIQUE NOT NULL,
+    description      varchar(255),
+    active           BIT DEFAULT 0,
+    created_at       timestamp,
+    updated_at       timestamp,
+    PRIMARY KEY (academic_year_id)
+);
+
+CREATE TABLE `semester`
+(
+    semester_id int NOT NULL AUTO_INCREMENT,
+    number      int,
+    description varchar(255),
+    created_at  timestamp,
+    updated_at  timestamp,
+    PRIMARY KEY (semester_id)
+);
+
 CREATE TABLE `group_type`
 (
     group_type_id int NOT NULL AUTO_INCREMENT,
@@ -65,64 +86,31 @@ CREATE TABLE `group`
     number        INT,
     description   varchar(255),
     group_type_id INT,
+    semester_id   INT,
     created_at    timestamp,
     updated_at    timestamp,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (group_type_id) REFERENCES `group_type` (group_type_id)
-);
-
-CREATE TABLE `generation`
-(
-    generation_id int        NOT NULL AUTO_INCREMENT,
-    year          int UNIQUE NOT NULL,
-    description   varchar(255),
-    created_at    timestamp,
-    updated_at    timestamp,
-    PRIMARY KEY (generation_id)
-);
-
-CREATE TABLE `study_year`
-(
-    study_year_id int NOT NULL AUTO_INCREMENT,
-    number        int,
-    description   varchar(255),
-    created_at    timestamp,
-    updated_at    timestamp,
-    PRIMARY KEY (study_year_id)
-);
-
-CREATE TABLE `semester`
-(
-    semester_id   int NOT NULL AUTO_INCREMENT,
-    number        int,
-    description   varchar(255),
-    study_year_id INT,
-    created_at    timestamp,
-    updated_at    timestamp,
-    PRIMARY KEY (semester_id),
-    FOREIGN KEY (study_year_id) REFERENCES `study_year` (study_year_id)
+    FOREIGN KEY (group_type_id) REFERENCES `group_type` (group_type_id),
+    FOREIGN KEY (semester_id) REFERENCES `semester` (semester_id),
+    UNIQUE KEY `number_group_type_semester` (`number`, `group_type_id`,`semester_id`)
 );
 
 CREATE TABLE `student`
 (
     student_id          int NOT NULL,
-    generation_id       INT,
     semester_id         INT,
     subjects_registered BIT DEFAULT 0,
     created_at          timestamp,
     updated_at          timestamp,
     PRIMARY KEY (student_id),
     FOREIGN KEY (student_id) REFERENCES `user` (user_id) ON DELETE CASCADE,
-    FOREIGN KEY (generation_id) REFERENCES `generation` (generation_id),
     FOREIGN KEY (semester_id) REFERENCES `semester` (semester_id)
 );
 
 CREATE TABLE `student_group`
 (
-    student_group_id INT NOT NULL AUTO_INCREMENT,
     student_id       INT NOT NULL,
     group_id         INT NOT NULL,
-    PRIMARY KEY (student_group_id),
     FOREIGN KEY (student_id) REFERENCES `student` (student_id),
     FOREIGN KEY (group_id) REFERENCES `group` (group_id),
     UNIQUE KEY `student_group` (`student_id`, `group_id`)
@@ -184,53 +172,51 @@ CREATE TABLE `schedule_type`
     PRIMARY KEY (schedule_type_id)
 );
 
+CREATE TABLE `subject_teacher`
+(
+    subject_teacher_id int NOT NULL AUTO_INCREMENT,
+    subject_id         INT,
+    teacher_id         INT,
+    academic_year_id   INT,
+    created_at         timestamp,
+    updated_at         timestamp,
+    PRIMARY KEY (subject_teacher_id),
+    FOREIGN KEY (subject_id) REFERENCES `subject` (subject_id),
+    FOREIGN KEY (teacher_id) REFERENCES `teacher` (teacher_id),
+    FOREIGN KEY (academic_year_id) REFERENCES `academic_year` (academic_year_id),
+    UNIQUE KEY `subject_teacher` (`subject_id`, `teacher_id`, `academic_year_id`)
+);
+
 CREATE TABLE `schedule`
 (
-    schedule_id      INT NOT NULL AUTO_INCREMENT,
-    day_of_week      INT,
-    start_time       INT,
-    end_time         INT,
-    schedule_type_id INT,
-    teacher_id       INT,
-    subject_id       INT,
-    group_id         INT,
-    semester_id      INT,
-    classroom_id     INT,
+    schedule_id        INT NOT NULL AUTO_INCREMENT,
+    day_of_week        INT,
+    start_time         INT,
+    end_time           INT,
+    schedule_type_id   INT,
+    subject_teacher_id INT,
+    group_id           INT,
+    semester_id        INT,
+    classroom_id       INT,
+    academic_year_id   INT,
     PRIMARY KEY (schedule_id),
     FOREIGN KEY (schedule_type_id) REFERENCES `schedule_type` (schedule_type_id),
-    FOREIGN KEY (teacher_id) REFERENCES `teacher` (teacher_id),
-    FOREIGN KEY (subject_id) REFERENCES `subject` (subject_id),
+    FOREIGN KEY (subject_teacher_id) REFERENCES `subject_teacher` (subject_teacher_id),
     FOREIGN KEY (group_id) REFERENCES `group` (group_id),
     FOREIGN KEY (semester_id) REFERENCES `semester` (semester_id),
-    FOREIGN KEY (classroom_id) REFERENCES `classroom` (classroom_id)
+    FOREIGN KEY (classroom_id) REFERENCES `classroom` (classroom_id),
+    FOREIGN KEY (academic_year_id) REFERENCES `academic_year` (academic_year_id)
 );
 
 CREATE TABLE `student_subject`
 (
-    student_subject_id int NOT NULL AUTO_INCREMENT,
-    student_id         INT,
-    subject_id         INT,
+    student_id         INT NOT NULL,
+    subject_id         INT NOT NULL,
     created_at         timestamp,
     updated_at         timestamp,
-    PRIMARY KEY (student_subject_id),
     FOREIGN KEY (student_id) REFERENCES `student` (student_id),
     FOREIGN KEY (subject_id) REFERENCES `subject` (subject_id),
     UNIQUE KEY `student_group` (`student_id`, `subject_id`)
-);
-
-CREATE TABLE `semester_subject_teacher`
-(
-    id          int NOT NULL AUTO_INCREMENT,
-    semester_id INT,
-    subject_id  INT,
-    teacher_id  INT,
-    created_at  timestamp,
-    updated_at  timestamp,
-    PRIMARY KEY (id),
-    FOREIGN KEY (semester_id) REFERENCES `semester` (semester_id),
-    FOREIGN KEY (subject_id) REFERENCES `subject` (subject_id),
-    FOREIGN KEY (teacher_id) REFERENCES `teacher` (teacher_id),
-    UNIQUE KEY `semester_subject_teacher` (`semester_id`, `subject_id`, `teacher_id`)
 );
 
 # Initial data
@@ -267,51 +253,39 @@ values ('Arta', 'Misini', 'artamisini@gmail.com', '$2y$10$xtfrdhBlBulXu65/7KNc/O
         CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 #password: 12345678
 
-#Study years
-INSERT INTO `study_year` (number, description, created_at, updated_at)
-values (1, 'Viti i parë', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `study_year` (number, description, created_at, updated_at)
-values (2, 'Viti i dytë', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `study_year` (number, description, created_at, updated_at)
-values (3, 'Viti i tretë', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `study_year` (number, description, created_at, updated_at)
-values (4, 'Viti i katertë', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
 #Semesters
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (1, 'Semestri I', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (2, 'Semestri II', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (3, 'Semestri III', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (4, 'Semestri IV', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (5, 'Semestri V', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (6, 'Semestri VI', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (7, 'Semestri VII', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `semester` (number, description, study_year_id, created_at, updated_at)
-values (8, 'Semestri VIII', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (1, 'Semestri I', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (2, 'Semestri II', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (3, 'Semestri III', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (4, 'Semestri IV', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (5, 'Semestri V', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (6, 'Semestri VI', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (7, 'Semestri VII', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `semester` (number, description, created_at, updated_at)
+values (8, 'Semestri VIII', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-#Generations
-INSERT INTO `generation` (year, description, created_at, updated_at)
+#Academic years
+INSERT INTO `academic_year` (year, description, created_at, updated_at)
 values (2018, '2018/2019', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `generation` (year, description, created_at, updated_at)
-values (2019, '2019/2020', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO `generation` (year, description, created_at, updated_at)
-values (2020, '2020/2021', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `academic_year` (year, description, active, created_at, updated_at)
+values (2019, '2019/2020', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 #Students
-INSERT INTO `student` (student_id, generation_id, semester_id, created_at, updated_at)
-values (2, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO `student` (student_id, semester_id, created_at, updated_at)
+values (2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 #Teacher types
 INSERT INTO `teacher_type` (title, description, created_at, updated_at)
 values ('profesor', 'Profesor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `teacher_type` (title, description, created_at, updated_at)
-values ('profesorasistent', 'Profesor/Asistent', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+values ('profesor-asistent', 'Profesor/Asistent', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO `teacher_type` (title, description, created_at, updated_at)
 values ('asistent', 'Asistent', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 

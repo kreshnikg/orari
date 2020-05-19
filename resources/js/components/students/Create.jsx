@@ -10,7 +10,6 @@ export default function Create(props) {
     let lastName = useRef(null);
     let email = useRef(null);
     let password = useRef(null);
-    let generation = useRef(null);
     let semester = useRef(null);
 
     useEffect(() => {
@@ -18,7 +17,6 @@ export default function Create(props) {
             axios.get(API_BASE_URL + '/create')
             .then((response) => {
                 let data = response.data;
-                generation.current.value = data.generation.description;
                 semester.current.value = data.semester.description;
             })
             .catch((error) => {
@@ -66,11 +64,6 @@ export default function Create(props) {
             <div className="form-group">
                 <label htmlFor="password">Fjalkalimi</label>
                 <input ref={password} className="form-control" type="password" name="password1" id="password"/>
-            </div>
-            <div className="form-group">
-                <label htmlFor="generation">Gjenerata</label>
-                <input ref={generation} className="form-control" type="text" name="generation"
-                       id="generation" readOnly disabled/>
             </div>
             <div className="form-group">
                 <label htmlFor="semester">Semestri</label>

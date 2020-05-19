@@ -90,7 +90,7 @@ export default function Index(props) {
                                         <td>{subject.code}</td>
                                         <td>{subject.ects_credits}</td>
                                         <td>
-                                            <span className={`badge p-1 badge-${subject.subject_type_id == 1 ? 'secondary' : 'info'}`}>
+                                            <span className={`badge p-1 badge-${subject.subject_type_id == 1 ? 'gray' : 'blue'}`}>
                                                 {subject.subject_type.description}
                                             </span>
                                         </td>

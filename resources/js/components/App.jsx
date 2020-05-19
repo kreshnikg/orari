@@ -28,6 +28,11 @@ import TeachersEdit from "./teachers/Edit";
 import AdminsIndex from "./admins/Index";
 import AdminsCreate from "./admins/Create";
 
+// Groups
+import GroupsIndex from "./groups/Index";
+import GroupsCreate from "./groups/Create";
+import GroupsShow from "./groups/Show";
+
 // Classrooms
 import ClassroomsIndex from "./classrooms/Index";
 import ClassroomsCreate from "./classrooms/Create";
@@ -53,6 +58,10 @@ export default function App(props) {
 
                     <Route exact path='/admin/admins' component={AdminsIndex}/>
                     <Route exact path='/admin/admins/create' component={AdminsCreate}/>
+
+                    <Route exact path='/admin/groups' component={GroupsIndex}/>
+                    <Route exact path='/admin/groups/create' component={GroupsCreate}/>
+                    <Route exact path='/admin/groups/:group_id' component={GroupsShow}/>
 
                     <Route exact path='/admin/classrooms' component={ClassroomsIndex}/>
                     <Route exact path='/admin/classrooms/create' component={ClassroomsCreate}/>

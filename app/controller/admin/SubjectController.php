@@ -109,7 +109,7 @@ class SubjectController extends BaseController
      */
     public function destroy($request, $id)
     {
-        Subject::delete($id);
+        Subject::destroy($id);
         return responseJson("success");
     }
 }

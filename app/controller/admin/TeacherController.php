@@ -126,7 +126,7 @@ class TeacherController extends BaseController
      */
     public function destroy($request, $id)
     {
-        Teacher::delete($id);
+        Teacher::destroy($id);
         return responseJson("success");
     }
 }

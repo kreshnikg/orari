@@ -5,7 +5,6 @@ namespace App\Controller\Auth;
 
 use App\Controller\BaseController;
 use App\Controller\UserController;
-use App\Generation;
 use App\Student;
 use App\User;
 
@@ -46,11 +45,8 @@ class RegisterController extends BaseController
             3
         );
 
-        $generation = Generation::where('year','=',date('Y'))->first();
-
         $student = new Student;
         $student->student_id = $userId;
-        $student->generation_id = $generation->generation_id;
         $student->semester_id = 1;
         $student->save();
 

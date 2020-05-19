@@ -49,6 +49,17 @@ Router::middleware(['auth'])->prefix("/api")->group(function () {
         Router::get('/admins/{id}', 'Admin\AdminController@show');
         #endregion
 
+        #region Groups
+        Router::get('/groups', 'Admin\GroupController@index');
+        Router::post('/groups', 'Admin\GroupController@store');
+        Router::get('/groups/create', 'Admin\GroupController@create');
+        Router::get('/groups/create/get-students-count/{semesterId}', 'Admin\GroupController@getStudentsCount');
+        Router::get('/groups/{id}/edit', 'Admin\GroupController@edit');
+        Router::post('/groups/{id}/delete', 'Admin\GroupController@destroy');
+        Router::post('/groups/{id}', 'Admin\GroupController@update');
+        Router::get('/groups/{id}', 'Admin\GroupController@show');
+        #endregion
+
         #region Classrooms
         Router::get('/classrooms', 'Admin\ClassroomController@index');
         Router::post('/classrooms', 'Admin\ClassroomController@store');

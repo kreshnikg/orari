@@ -21,6 +21,8 @@ export default function Sidebar(props) {
 
                 <SidebarItem url="/admins" forRoles={["admin"]} title="Administratorët" icon="fas fa-user-cog"/>
 
+                <SidebarItem url="/groups" forRoles={["admin"]} title="Grupet" icon="fas fa-users"/>
+
                 <SidebarItem url="/classrooms" forRoles={["admin"]} title="Klasat" icon="fas fa-chalkboard"/>
 
                 <li className="sidebar-item position-absolute w-100 text-center" style={{bottom : "20px"}}>

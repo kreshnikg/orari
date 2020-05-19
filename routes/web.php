@@ -45,6 +45,13 @@ Router::middleware(['auth'])->group(function () use ($defaultView) {
         #endregion
 
         #region Classrooms
+        Router::get('/groups', $defaultView);
+        Router::get('/groups/create', $defaultView);
+        Router::get('/groups/{id}/edit', $defaultView);
+        Router::get('/groups/{id}', $defaultView);
+        #endregion
+
+        #region Classrooms
         Router::get('/classrooms', $defaultView);
         Router::get('/classrooms/create', $defaultView);
         Router::get('/classrooms/{id}/edit', $defaultView);

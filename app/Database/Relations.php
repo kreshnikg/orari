@@ -110,7 +110,7 @@ trait Relations
                 if ($relation["type"] == "hasOne")
                     $res->$name = current($relatedModel);
                 else if ($relation["type"] == "hasMany")
-                    $res->$name = $relatedModel;
+                    $res->$name = array_values($relatedModel);
             }
         }
     }
