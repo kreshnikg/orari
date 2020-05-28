@@ -4,6 +4,7 @@
 namespace App\Controller\Student;
 
 use App\Controller\BaseController;
+use App\Database\Model;
 use App\Student;
 use App\StudentSubject;
 use App\Subject;
@@ -60,7 +61,11 @@ class SubjectController extends BaseController
         $student = Student::find(user()->user_id);
 
         $studentSubject = StudentSubject::where('student_id','=',$student->student_id)->where('subject_id','=',$subject->subject_id)->first();
-        StudentSubject::destroy($studentSubject->student_subject_id);
+        Model::raw("DELETE FROM `student_subject` WHERE `student_id` = $studentSubject->student_id
+            AND `subject_id` = $studentSubject->subject_id
+        ");
+
+
 
         return redirectBack();
     }
