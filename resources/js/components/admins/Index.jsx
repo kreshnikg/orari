@@ -4,9 +4,6 @@ import axios from "axios";
 import swal from "@sweetalert/with-react";
 import Spinner from "../includes/Spinner";
 
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
 
 export default function Index(props) {
 
@@ -65,29 +62,6 @@ export default function Index(props) {
 
     return (
         <>
-            <div className="card my-shadow border-0">
-                <div className="card-body">
-                    <FullCalendar
-                        defaultView="timeGridWeek"
-                        dayNames={["E Dielë","E Hënë","E Martë","E Mërkurë","E Enjte","E Premte","E Shtunë"]}
-                        dayNamesShort={["Die","Hën","Mar","Mër","Enj","Pre","Sht"]}
-                        plugins={[timeGridPlugin,dayGridPlugin]}
-                        hiddenDays={[0]}
-                        firstDay={1}
-                        timeFormat="H(:mm)"
-                        eventTimeFormat={{
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12:false
-                        }}
-                        eventTextColor={"white"}
-                        events={[
-                            { title: 'event 1', date: '2020-05-01T14:00:00', allDay:false },
-                            { title: 'event 2', date: '2020-05-02' }
-                        ]}
-                    />
-                </div>
-            </div>
             <div className="d-flex align-items-center mb-4">
                 <h4 className="mb-0">Administratorët</h4>
                 <Link to="/admin/admins/create" className="btn btn-primary ml-auto my-btn-primary-color my-shadow">Shto

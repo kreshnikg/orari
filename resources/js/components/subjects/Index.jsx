@@ -63,7 +63,8 @@ export default function Index(props) {
         <>
             <div className="d-flex align-items-center mb-4">
                 <h4 className="mb-0">Lëndët</h4>
-                <Link to="/admin/subjects/create" className="btn btn-primary ml-auto my-btn-primary-color my-shadow">Shto
+                <Link to="/admin/subjects/teachers" className="btn btn-outline-secondary ml-auto mr-3">Cakto ligjëruesit</Link>
+                <Link to="/admin/subjects/create" className="btn btn-primary my-btn-primary-color my-shadow">Shto
                     lëndë</Link>
             </div>
 

@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, Fragment} from 'react';
 import axios from "axios";
 import swal from "@sweetalert/with-react";
+import {Link} from "react-router-dom";
 
 export default function Create(props) {
 
@@ -118,65 +119,71 @@ export default function Create(props) {
     </div>;
 
     return (
-        <div className="card border-0 my-shadow">
-            <div className="card-body">
-                <h5 className="card-title mb-4">Gjenerimi i grupeve</h5>
-                <div className="form-group">
-                    <label htmlFor="semester">Semestri</label>
-                    <select ref={semester} className="form-control" name="semester" id="semester" required>
-                        <option value="" disabled selected>Zgjidh një opsion</option>
-                        {state.semesters.map((semester) => {
-                            return (
-                                <option onClick={() => getStudentsCount(semester)}
-                                        value={semester.semester_id}>{semester.description}</option>
-                            )
-                        })}
-                    </select>
-                </div>
-                {state.selectedSemester && (
-                    state.groupsCreated ? groupsCreatedAlert :
-                <>
-                    <div className="form-group">
-                        <div className="form-group">
-                            <label htmlFor="nr_students">Nr. i studenteve</label>
-                            <input className="form-control"
-                                   type="text"
-                                   disabled
-                                   readOnly
-                                   name="nr_students"
-                                   id="nr_students"
-                                   value={studentCount[state.selectedSemester]}/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div className="form-group">
-                            <label htmlFor="nr_groups_lecture">Nr. grupeve per ligjerata (max: {nrGroups.max})</label>
-                            <input className="form-control"
-                                   type="number"
-                                   onChange={(e) => setNrGroupsHandler(e, "lecture")}
-                                   value={nrGroups.lecture}
-                                   name="nr_groups_lecture"
-                                   id="nr_groups_lecture"/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div className="form-group">
-                            <label htmlFor="nr_groups_practice">Nr. grupeve per ushtrime (max: {nrGroups.max})</label>
-                            <input className="form-control"
-                                   type="number"
-                                   onChange={(e) => setNrGroupsHandler(e, "practice")}
-                                   value={nrGroups.practice}
-                                   name="nr_groups_practice"
-                                   id="nr_groups_practice"/>
-                        </div>
-                    </div>
-                    <button className="btn btn-primary my-btn-primary-color"
-                            type="button"
-                            onClick={generateGroupsHandler}>
-                        Gjenero listat
-                    </button>
-                </>)}
+        <>
+            <div className="d-flex align-items-center mb-4">
+                <h4 className="mb-0">Gjenerimi i grupeve</h4>
             </div>
-        </div>
+            <div className="card border-0 my-shadow">
+                <div className="card-body">
+                    <div className="form-group">
+                        <label htmlFor="semester">Semestri</label>
+                        <select ref={semester} className="form-control" name="semester" id="semester" required>
+                            <option value="" disabled selected>Zgjidh një opsion</option>
+                            {state.semesters.map((semester) => {
+                                return (
+                                    <option onClick={() => getStudentsCount(semester)}
+                                            value={semester.semester_id}>{semester.description}</option>
+                                )
+                            })}
+                        </select>
+                    </div>
+                    {state.selectedSemester && (
+                        state.groupsCreated ? groupsCreatedAlert :
+                            <>
+                                <div className="form-group">
+                                    <div className="form-group">
+                                        <label htmlFor="nr_students">Nr. i studenteve</label>
+                                        <input className="form-control"
+                                               type="text"
+                                               disabled
+                                               readOnly
+                                               name="nr_students"
+                                               id="nr_students"
+                                               value={studentCount[state.selectedSemester]}/>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <div className="form-group">
+                                        <label htmlFor="nr_groups_lecture">Nr. grupeve per ligjerata
+                                            (max: {nrGroups.max})</label>
+                                        <input className="form-control"
+                                               type="number"
+                                               onChange={(e) => setNrGroupsHandler(e, "lecture")}
+                                               value={nrGroups.lecture}
+                                               name="nr_groups_lecture"
+                                               id="nr_groups_lecture"/>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <div className="form-group">
+                                        <label htmlFor="nr_groups_practice">Nr. grupeve per ushtrime
+                                            (max: {nrGroups.max})</label>
+                                        <input className="form-control"
+                                               type="number"
+                                               onChange={(e) => setNrGroupsHandler(e, "practice")}
+                                               value={nrGroups.practice}
+                                               name="nr_groups_practice"
+                                               id="nr_groups_practice"/>
+                                    </div>
+                                </div>
+                                <button className="btn btn-primary my-btn-primary-color"
+                                        type="button"
+                                        onClick={generateGroupsHandler}>
+                                    Gjenero listat
+                                </button>
+                            </>)}
+                </div>
+            </div>
+        </>
     )
 }

@@ -20,4 +20,9 @@ class Teacher extends Model
     {
         $this->hasOne('App\TeacherType', 'teacher_type_id', 'teacher_type_id',$nestedRelations);
     }
+
+    public function subjectTeacher($nestedRelations = null)
+    {
+        $this->hasMany('App\SubjectTeacher', 'teacher_id', 'teacher_id',$nestedRelations);
+    }
 }

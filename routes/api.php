@@ -11,9 +11,19 @@ Router::middleware(['auth'])->prefix("/api")->group(function () {
 
     Router::middleware(['admin'])->prefix("/admin")->group(function () {
         #region Subjects
+        Router::get('/schedules', 'Admin\ScheduleController@index');
+        Router::post('/schedules', 'Admin\ScheduleController@store');
+        Router::get('/schedules/create', 'Admin\ScheduleController@create');
+        Router::post('/schedules/{schedule}/delete', 'Admin\ScheduleController@destroy');
+
+        #endregion
+
+        #region Subjects
         Router::get('/subjects', 'Admin\SubjectController@index');
         Router::post('/subjects', 'Admin\SubjectController@store');
         Router::get('/subjects/create', 'Admin\SubjectController@create');
+        Router::get('/subjects/teachers', 'Admin\SubjectController@registerTeachers');
+        Router::post('/subjects/teachers', 'Admin\SubjectController@addSubjectTeacher');
         Router::get('/subjects/{id}/edit', 'Admin\SubjectController@edit');
         Router::post('/subjects/{id}/delete', 'Admin\SubjectController@destroy');
         Router::post('/subjects/{id}', 'Admin\SubjectController@update');
@@ -73,8 +83,13 @@ Router::middleware(['auth'])->prefix("/api")->group(function () {
 
     Router::middleware(['student'])->prefix("/student")->group(function () {
         Router::get('/subjects', 'Student\SubjectController@index');
+        Router::get('/schedule', 'Admin\ScheduleController@index');
         Router::post('/subjects/submit', 'Student\SubjectController@submit');
         Router::post('/subjects/{id}/register', 'Student\SubjectController@register');
         Router::post('/subjects/{id}/cancel', 'Student\SubjectController@cancel');
+    });
+
+    Router::middleware(['teacher'])->prefix("/teacher")->group(function () {
+        Router::get('/schedule', 'Teacher\ScheduleController@index');
     });
 });

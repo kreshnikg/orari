@@ -93,9 +93,9 @@ trait Query {
             $this->query = "SELECT * FROM `$this->table` WHERE $column $operator ?";
         } else {
             if($this->nestedWhere)
-                $this->query .= " AND $column $operator ?";
+                $this->query .= " AND `$column` $operator ?";
             else
-                $this->query .= " WHERE $column $operator ?";
+                $this->query .= " WHERE `$column` $operator ?";
         }
         $this->nestedWhere = true;
         $this->addValue($value);
@@ -114,9 +114,9 @@ trait Query {
         $this->addValue(...$values);
         $parameters = $this->getParametersForQuery(count($values));
         if(empty($this->query))
-            $this->query = "SELECT * FROM `$this->table` WHERE $column IN ($parameters)";
+            $this->query = "SELECT * FROM `$this->table` WHERE `$column` IN ($parameters)";
         else
-            $this->query .= " WHERE $column IN ($parameters)";
+            $this->query .= " WHERE `$column` IN ($parameters)";
         return $this;
     }
 
@@ -229,7 +229,7 @@ trait Query {
     private function orderQuery($column, $order)
     {
         if (($order == 'ASC' || $order == 'DESC') && !empty($this->query))
-            $this->query .= " ORDER BY $column $order";
+            $this->query .= " ORDER BY `$column` $order";
         return $this;
     }
 

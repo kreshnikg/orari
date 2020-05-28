@@ -11,7 +11,7 @@
     <?php if($auth): ?>
     <div id="app"></div>
     <?php else :?>
-    <div id="guest" class="d-flex h-100"></div>
+    <div id="guest" class="d-flex" style="height: 100vh"></div>
     <?php endif;?>
 </body>
 </html>

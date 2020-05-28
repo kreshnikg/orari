@@ -4,6 +4,10 @@
 namespace App\Controller\Teacher;
 
 
+use App\Schedule;
+use App\Semester;
+use App\Subject;
+
 class ScheduleController
 {
 
@@ -12,7 +16,18 @@ class ScheduleController
      */
     public function index()
     {
-        return view('schedules/index');
+        $semester = 1;
+        if(isset($_GET["semester"]))
+            $semester = $_GET["semester"];
+        $schedules = Schedule::with(['type','group','classroom'])->where('semester_id','=',$semester)->get();
+        $subjects = Subject::with(['subjectTeacher.teacher.user'])->where('semester_id', '=', $semester)->get();
+        $semesters = Semester::all();
+        return responseJson([
+            "schedules" => $schedules,
+            "subjects" => $subjects,
+            "semesters" => $semesters,
+            "teacherId" => user()->user_id
+        ]);
     }
 
     /**

@@ -14,4 +14,9 @@ class Subject extends Model
     {
         $this->hasOne('App\SubjectType', 'subject_type_id', 'subject_type_id', $nestedRelations);
     }
+
+    public function subjectTeacher($nestedRelations = null)
+    {
+        $this->hasMany('App\SubjectTeacher', 'subject_id', 'subject_id', $nestedRelations);
+    }
 }

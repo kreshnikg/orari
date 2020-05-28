@@ -293,3 +293,15 @@ body {
     background-color: #6c757d30;
     color: #6c757d;
 }
+
+.selected {
+    background-color: aliceblue;
+}
+
+.cursor-pointer:hover {
+    cursor: pointer;
+}
+
+.my-badge {
+    background-color: #17a2d1 !important;
+}

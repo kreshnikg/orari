@@ -9,23 +9,26 @@ export default function Create(props) {
     let title = useRef(null);
     let code = useRef(null);
     let subjectType = useRef(null);
+    let semester = useRef(null);
     let ects = useRef(null);
 
-    const [state,setState] = useState({
-        subjectTypes: []
+    const [state, setState] = useState({
+        subjectTypes: [],
+        semesters: []
     })
 
     useEffect(() => {
         const getData = () => {
             axios.get(API_BASE_URL + '/create')
-            .then((response) => {
-                setState({
-                    subjectTypes: response.data.subjectTypes
+                .then((response) => {
+                    setState({
+                        subjectTypes: response.data.subjectTypes,
+                        semesters: response.data.semesters
+                    })
                 })
-            })
-            .catch((error) => {
+                .catch((error) => {
 
-            });
+                });
         }
 
         getData()
@@ -33,7 +36,7 @@ export default function Create(props) {
 
     const updateHandler = () => {
         let data = appendData();
-        axios.post(API_BASE_URL,data).then((response) => {
+        axios.post(API_BASE_URL, data).then((response) => {
             swal({
                 icon: 'success',
                 timer: 1500,
@@ -44,10 +47,11 @@ export default function Create(props) {
 
     const appendData = () => {
         let data = new FormData();
-        data.append("title",title.current.value);
-        data.append("code",code.current.value);
-        data.append("subject_type",subjectType.current.value);
-        data.append("ects_credits",ects.current.value);
+        data.append("title", title.current.value);
+        data.append("code", code.current.value);
+        data.append("subject_type", subjectType.current.value);
+        data.append("semester", semester.current.value);
+        data.append("ects_credits", ects.current.value);
         return data;
     }
 
@@ -66,8 +70,19 @@ export default function Create(props) {
                 <select ref={subjectType} className="form-control" name="subject_type" id="subject_type" required>
                     <option value="" disabled selected>Zgjidh një opsion</option>
                     {state.subjectTypes.map((subjectType) => {
-                        return(
+                        return (
                             <option value={subjectType.subject_type_id}>{subjectType.description}</option>
+                        )
+                    })}
+                </select>
+            </div>
+            <div className="form-group">
+                <label htmlFor="semester">Semestri</label>
+                <select ref={semester} className="form-control" name="semester" id="semester" required>
+                    <option value="" disabled selected>Zgjidh një opsion</option>
+                    {state.semesters.map((semester) => {
+                        return (
+                            <option value={semester.semester_id}>{semester.description}</option>
                         )
                     })}
                 </select>

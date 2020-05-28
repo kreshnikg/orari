@@ -71,7 +71,7 @@ export default function Create(props) {
                 <input ref={email} className="form-control" type="email" name="email1" id="email"/>
             </div>
             <div className="form-group">
-                <label htmlFor="semester">Gjenerata</label>
+                <label htmlFor="semester">Semestri</label>
                 <select ref={semester} className="form-control" name="semester" id="semester" required>
                     <option value="" disabled selected>Zgjidh një opsion</option>
                     {state.semesters.map((semester) => {

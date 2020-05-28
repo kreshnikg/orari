@@ -15,6 +15,7 @@ Router::middleware(['auth'])->group(function () use ($defaultView) {
     Router::middleware(['admin'])->prefix("/admin")->group(function () use ($defaultView) {
 
         Router::get('/schedules', $defaultView);
+        Router::get('/schedules/create', $defaultView);
 
         #region Subjects
         Router::get('/subjects', $defaultView);
@@ -65,6 +66,7 @@ Router::middleware(['auth'])->group(function () use ($defaultView) {
         Router::get('/subjects/{id}', $defaultView);
         #endregion
 
+        Router::get('/schedule', $defaultView);
         #region Students
         Router::get('/students', $defaultView);
         Router::get('/students/{id}', $defaultView);
@@ -74,6 +76,7 @@ Router::middleware(['auth'])->group(function () use ($defaultView) {
     Router::middleware(['student'])->prefix("/student")->group(function () use ($defaultView) {
         #region Subjects
         Router::get('/subjects', $defaultView);
+        Router::get('/schedule', $defaultView);
         #endregion
     });
 });

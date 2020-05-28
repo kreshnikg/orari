@@ -11,10 +11,12 @@ export default function Create(props) {
     let title = useRef(null);
     let code = useRef(null);
     let subjectType = useRef(null);
+    let semester = useRef(null);
     let ects = useRef(null);
 
     const [state,setState] = useState({
-        subjectTypes: []
+        subjectTypes: [],
+        semesters: []
     })
 
     useEffect(() => {
@@ -22,12 +24,14 @@ export default function Create(props) {
             axios.get(API_BASE_URL + '/edit')
             .then((response) => {
                 setState({
-                    subjectTypes: response.data.subjectTypes
+                    subjectTypes: response.data.subjectTypes,
+                    semesters: response.data.semesters
                 })
                 let subject = response.data.subject;
                 title.current.value = subject.title;
                 code.current.value = subject.code;
                 subjectType.current.value = subject.subject_type_id;
+                semester.current.value = subject.semester_id;
                 ects.current.value = subject.ects_credits;
             })
             .catch((error) => {
@@ -54,6 +58,7 @@ export default function Create(props) {
         data.append("title",title.current.value);
         data.append("code",code.current.value);
         data.append("subject_type",subjectType.current.value);
+        data.append("semester", semester.current.value);
         data.append("ects_credits",ects.current.value);
         return data;
     }
@@ -75,6 +80,17 @@ export default function Create(props) {
                     {state.subjectTypes.map((subjectType) => {
                         return(
                             <option value={subjectType.subject_type_id}>{subjectType.description}</option>
+                        )
+                    })}
+                </select>
+            </div>
+            <div className="form-group">
+                <label htmlFor="semester">Semestri</label>
+                <select ref={semester} className="form-control" name="semester" id="semester" required>
+                    <option value="" disabled selected>Zgjidh një opsion</option>
+                    {state.semesters.map((semester) => {
+                        return (
+                            <option value={semester.semester_id}>{semester.description}</option>
                         )
                     })}
                 </select>
