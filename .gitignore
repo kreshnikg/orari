@@ -1,2 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
-./storage
+
+/.idea
+/storage/img
+/vendor/
+/public/css/app.css
+/public/js/app.js
+/public/fonts
+/fonts
+/package-lock.json
